@@ -65,6 +65,10 @@ function create {
 		;;
 	haskell)
 		;;
+  python)
+    CONFIG="-DpackageName=SolviceRoutingClient"
+    ADD_PARAMS="-DpackageName=SolviceRoutingClient"
+		;;
 	r)
 		ADD_PARAMS="-DpackageName=SolviceRoutingClient"
 		;;
@@ -101,5 +105,5 @@ else
   create java
 #  create nodejs-server
 #  create php
-#  create python
+  create python
 fi

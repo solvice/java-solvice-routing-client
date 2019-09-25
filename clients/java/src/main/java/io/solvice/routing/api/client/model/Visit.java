@@ -63,10 +63,10 @@ public class Visit {
   
 
   /**
-  * Get location
+  * Location name.
   * @return location
   **/
-  @Schema(example = "Ghent, Belgium", description = "")
+  @Schema(example = "Ghent, Belgium", description = "Location name.")
   public String getLocation() {
     return location;
   }
@@ -81,10 +81,10 @@ public class Visit {
   
 
   /**
-  * Get order
+  * Order name.
   * @return order
   **/
-  @Schema(example = "order_233062", description = "")
+  @Schema(example = "order_233062", description = "Order name.")
   public String getOrder() {
     return order;
   }
@@ -99,10 +99,12 @@ public class Visit {
   
 
   /**
-  * Get arrival
+  * Arrival at visit
+  * minimum: 0
+  * maximum: 1440
   * @return arrival
   **/
-  @Schema(example = "730", description = "")
+  @Schema(example = "730", description = "Arrival at visit")
   public Integer getArrival() {
     return arrival;
   }
@@ -118,6 +120,8 @@ public class Visit {
 
   /**
   * Get finish
+  * minimum: 0
+  * maximum: 1440
   * @return finish
   **/
   @Schema(example = "750", description = "")
@@ -136,6 +140,7 @@ public class Visit {
 
   /**
   * Drive time to next location in minutes.
+  * minimum: 0
   * @return drive
   **/
   @Schema(example = "5", description = "Drive time to next location in minutes.")

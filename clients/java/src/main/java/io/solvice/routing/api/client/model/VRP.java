@@ -21,6 +21,7 @@ import com.google.gson.stream.JsonWriter;
 import io.solvice.routing.api.client.model.Location;
 import io.solvice.routing.api.client.model.Options;
 import io.solvice.routing.api.client.model.Order;
+import io.solvice.routing.api.client.model.SolveRequest;
 import io.solvice.routing.api.client.model.Solver;
 import io.solvice.routing.api.client.model.Vehicle;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,10 +33,7 @@ import java.util.List;
  * VRP
  */
 
-public class VRP {
-
-  @SerializedName("solver")
-  private Solver solver = null;
+public class VRP extends SolveRequest {
 
   @SerializedName("locations")
   private List<Location> locations = new ArrayList<Location>();
@@ -48,24 +46,6 @@ public class VRP {
 
   @SerializedName("options")
   private Options options = null;
-  public VRP solver(Solver solver) {
-    this.solver = solver;
-    return this;
-  }
-
-  
-
-  /**
-  * Get solver
-  * @return solver
-  **/
-  @Schema(required = true, description = "")
-  public Solver getSolver() {
-    return solver;
-  }
-  public void setSolver(Solver solver) {
-    this.solver = solver;
-  }
   public VRP locations(List<Location> locations) {
     this.locations = locations;
     return this;
@@ -156,24 +136,23 @@ public class VRP {
       return false;
     }
     VRP VRP = (VRP) o;
-    return Objects.equals(this.solver, VRP.solver) &&
-        Objects.equals(this.locations, VRP.locations) &&
+    return Objects.equals(this.locations, VRP.locations) &&
         Objects.equals(this.fleet, VRP.fleet) &&
         Objects.equals(this.orders, VRP.orders) &&
-        Objects.equals(this.options, VRP.options);
+        Objects.equals(this.options, VRP.options) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(solver, locations, fleet, orders, options);
+    return java.util.Objects.hash(locations, fleet, orders, options, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class VRP {\n");
-    
-    sb.append("    solver: ").append(toIndentedString(solver)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
     sb.append("    fleet: ").append(toIndentedString(fleet)).append("\n");
     sb.append("    orders: ").append(toIndentedString(orders)).append("\n");

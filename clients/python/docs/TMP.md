@@ -3,7 +3,6 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**solver** | **str** |  | 
 **sales** | [**list[Sales]**](Sales.md) |  | 
 **stores** | [**list[Store]**](Store.md) |  | 
 

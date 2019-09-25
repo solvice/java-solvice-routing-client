@@ -1,0 +1,45 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/christophevanhuele/.nvm/versions/node/v5.5.0/bin/node',
+1 verbose cli   '/Users/christophevanhuele/.nvm/versions/node/v5.5.0/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'gh-pages' ]
+2 info using npm@3.3.12
+3 info using node@v5.5.0
+4 verbose run-script [ 'pregh-pages', 'gh-pages', 'postgh-pages' ]
+5 info lifecycle onroute-api@1.0.0~pregh-pages: onroute-api@1.0.0
+6 silly lifecycle onroute-api@1.0.0~pregh-pages: no script for pregh-pages, continuing
+7 info lifecycle onroute-api@1.0.0~gh-pages: onroute-api@1.0.0
+8 verbose lifecycle onroute-api@1.0.0~gh-pages: unsafe-perm in lifecycle true
+9 verbose lifecycle onroute-api@1.0.0~gh-pages: PATH: /Users/christophevanhuele/.nvm/versions/node/v5.5.0/lib/node_modules/npm/bin/node-gyp-bin:/Users/christophevanhuele/src/api-specs-solvice/routing-solver/node_modules/.bin:/Users/christophevanhuele/bin/gcloud/bin:/Users/christophevanhuele/.nvm/versions/node/v5.5.0/bin:/Users/christophevanhuele/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Users/christophevanhuele/bin/or-tools/lib/
+10 verbose lifecycle onroute-api@1.0.0~gh-pages: CWD: /Users/christophevanhuele/src/api-specs-solvice/routing-solver
+11 silly lifecycle onroute-api@1.0.0~gh-pages: Args: [ '-c', 'swagger-repo gh-pages' ]
+12 info lifecycle onroute-api@1.0.0~gh-pages: Failed to exec gh-pages script
+13 verbose stack Error: onroute-api@1.0.0 gh-pages: `swagger-repo gh-pages`
+13 verbose stack spawn ENOENT
+13 verbose stack     at ChildProcess.<anonymous> (/Users/christophevanhuele/.nvm/versions/node/v5.5.0/lib/node_modules/npm/lib/utils/spawn.js:17:16)
+13 verbose stack     at emitTwo (events.js:100:13)
+13 verbose stack     at ChildProcess.emit (events.js:185:7)
+13 verbose stack     at maybeClose (internal/child_process.js:821:16)
+13 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+14 verbose pkgid onroute-api@1.0.0
+15 verbose cwd /Users/christophevanhuele/src/api-specs-solvice/routing-solver
+16 error Darwin 18.5.0
+17 error argv "/Users/christophevanhuele/.nvm/versions/node/v5.5.0/bin/node" "/Users/christophevanhuele/.nvm/versions/node/v5.5.0/bin/npm" "run" "gh-pages"
+18 error node v5.5.0
+19 error npm  v3.3.12
+20 error file sh
+21 error code ELIFECYCLE
+22 error errno ENOENT
+23 error syscall spawn
+24 error onroute-api@1.0.0 gh-pages: `swagger-repo gh-pages`
+24 error spawn ENOENT
+25 error Failed at the onroute-api@1.0.0 gh-pages script 'swagger-repo gh-pages'.
+25 error Make sure you have the latest version of node.js and npm installed.
+25 error If you do, this is most likely a problem with the onroute-api package,
+25 error not with npm itself.
+25 error Tell the author that this fails on your system:
+25 error     swagger-repo gh-pages
+25 error You can get their info via:
+25 error     npm owner ls onroute-api
+25 error There is likely additional logging output above.
+26 verbose exit [ 1, true ]

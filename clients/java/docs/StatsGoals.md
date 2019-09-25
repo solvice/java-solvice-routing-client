@@ -3,6 +3,6 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**goal** | **String** |  |  [optional]
-**weight** | **Integer** |  |  [optional]
+**goal** | **String** | Goal name |  [optional]
+**weight** | **Integer** | Weight total for goal. |  [optional]
 **conflicts** | [**List&lt;StatsConflicts&gt;**](StatsConflicts.md) |  |  [optional]

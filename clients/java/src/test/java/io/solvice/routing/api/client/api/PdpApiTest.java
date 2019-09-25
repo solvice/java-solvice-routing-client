@@ -35,21 +35,6 @@ public class PdpApiTest {
     private final PdpApi api = new PdpApi();
 
     /**
-     * Job
-     *
-     * When posting a new solve request, this job can be checked again under this endpoint. In fact, it should be the entire request posted as-is.
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getJobTest() throws ApiException {
-        UUID jobId = null;
-        Job response = api.getJob(jobId);
-
-        // TODO: test validations
-    }
-    /**
      * Status
      *
      * Retrieve a specific job status

@@ -13,6 +13,7 @@
 package io.solvice.routing.api.client.api;
 
 import io.solvice.routing.api.client.ApiException;
+import io.solvice.routing.api.client.model.InputError;
 import io.solvice.routing.api.client.model.Job;
 import io.solvice.routing.api.client.model.RoutingSolution;
 import java.util.UUID;
@@ -33,21 +34,6 @@ public class VrpApiTest {
 
     private final VrpApi api = new VrpApi();
 
-    /**
-     * Job
-     *
-     * When posting a new solve request, this job can be checked again under this endpoint. In fact, it should be the entire request posted as-is.
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getJobTest() throws ApiException {
-        UUID jobId = null;
-        Job response = api.getJob(jobId);
-
-        // TODO: test validations
-    }
     /**
      * Status
      *

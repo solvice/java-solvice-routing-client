@@ -20,15 +20,14 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 /**
- * Options
+ * Options block to tweak the Routing Engine.
  */
-
+@Schema(description = "Options block to tweak the Routing Engine.")
 public class Options {
   /**
-   * Gets or Sets profile
+   * All vehicles are either CAR or TRUCK.
    */
   @JsonAdapter(ProfileEnum.Adapter.class)
   public enum ProfileEnum {
@@ -73,7 +72,7 @@ public class Options {
   private ProfileEnum profile = null;
 
   @SerializedName("allow_overtime")
-  private String allowOvertime = null;
+  private Boolean allowOvertime = null;
 
   @SerializedName("overconstrained")
   private Boolean overconstrained = null;
@@ -81,8 +80,58 @@ public class Options {
   @SerializedName("minimize_vehicle_use")
   private Boolean minimizeVehicleUse = null;
 
-  @SerializedName("vehicle_setup_cost")
-  private BigDecimal vehicleSetupCost = null;
+  @SerializedName("traffic")
+  private Integer traffic = null;
+
+  @SerializedName("polylines")
+  private Boolean polylines = null;
+  /**
+   * Calculate in minutes or seconds. Minutes is advised.
+   */
+  @JsonAdapter(TimeUnitEnum.Adapter.class)
+  public enum TimeUnitEnum {
+    MINUTES("MINUTES"),
+    SECONDS("SECONDS");
+
+    private String value;
+
+    TimeUnitEnum(String value) {
+      this.value = value;
+    }
+    public String getValue() {
+      return value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+    public static TimeUnitEnum fromValue(String text) {
+      for (TimeUnitEnum b : TimeUnitEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+    public static class Adapter extends TypeAdapter<TimeUnitEnum> {
+      @Override
+      public void write(final JsonWriter jsonWriter, final TimeUnitEnum enumeration) throws IOException {
+        jsonWriter.value(enumeration.getValue());
+      }
+
+      @Override
+      public TimeUnitEnum read(final JsonReader jsonReader) throws IOException {
+        String value = jsonReader.nextString();
+        return TimeUnitEnum.fromValue(String.valueOf(value));
+      }
+    }
+  }
+  @SerializedName("timeUnit")
+  private TimeUnitEnum timeUnit = TimeUnitEnum.MINUTES;
+
+  @SerializedName("force_type_constraints")
+  private Boolean forceTypeConstraints = null;
   public Options profile(ProfileEnum profile) {
     this.profile = profile;
     return this;
@@ -91,17 +140,17 @@ public class Options {
   
 
   /**
-  * Get profile
+  * All vehicles are either CAR or TRUCK.
   * @return profile
   **/
-  @Schema(description = "")
+  @Schema(description = "All vehicles are either CAR or TRUCK.")
   public ProfileEnum getProfile() {
     return profile;
   }
   public void setProfile(ProfileEnum profile) {
     this.profile = profile;
   }
-  public Options allowOvertime(String allowOvertime) {
+  public Options allowOvertime(Boolean allowOvertime) {
     this.allowOvertime = allowOvertime;
     return this;
   }
@@ -113,10 +162,10 @@ public class Options {
   * @return allowOvertime
   **/
   @Schema(description = "If the `shiftend` should be a soft condition to take into account. When `allow_overtime: true` then some orders will be planned after `shiftend`. ")
-  public String getAllowOvertime() {
+  public Boolean isAllowOvertime() {
     return allowOvertime;
   }
-  public void setAllowOvertime(String allowOvertime) {
+  public void setAllowOvertime(Boolean allowOvertime) {
     this.allowOvertime = allowOvertime;
   }
   public Options overconstrained(Boolean overconstrained) {
@@ -127,10 +176,10 @@ public class Options {
   
 
   /**
-  * If you do not need to assign everything to 
+  * If you do not need to assign every order to a vehicle, then set &#x60;overconstrained: true&#x60;. 
   * @return overconstrained
   **/
-  @Schema(description = "If you do not need to assign everything to ")
+  @Schema(description = "If you do not need to assign every order to a vehicle, then set `overconstrained: true`. ")
   public Boolean isOverconstrained() {
     return overconstrained;
   }
@@ -145,33 +194,87 @@ public class Options {
   
 
   /**
-  * sd
+  * Minimise the vehicle useage or minimise total travel time. Two different objective functions.
   * @return minimizeVehicleUse
   **/
-  @Schema(description = "sd")
+  @Schema(description = "Minimise the vehicle useage or minimise total travel time. Two different objective functions.")
   public Boolean isMinimizeVehicleUse() {
     return minimizeVehicleUse;
   }
   public void setMinimizeVehicleUse(Boolean minimizeVehicleUse) {
     this.minimizeVehicleUse = minimizeVehicleUse;
   }
-  public Options vehicleSetupCost(BigDecimal vehicleSetupCost) {
-    this.vehicleSetupCost = vehicleSetupCost;
+  public Options traffic(Integer traffic) {
+    this.traffic = traffic;
     return this;
   }
 
   
 
   /**
-  * Get vehicleSetupCost
-  * @return vehicleSetupCost
+  * Modifier for traffic.
+  * @return traffic
   **/
-  @Schema(description = "")
-  public BigDecimal getVehicleSetupCost() {
-    return vehicleSetupCost;
+  @Schema(description = "Modifier for traffic.")
+  public Integer getTraffic() {
+    return traffic;
   }
-  public void setVehicleSetupCost(BigDecimal vehicleSetupCost) {
-    this.vehicleSetupCost = vehicleSetupCost;
+  public void setTraffic(Integer traffic) {
+    this.traffic = traffic;
+  }
+  public Options polylines(Boolean polylines) {
+    this.polylines = polylines;
+    return this;
+  }
+
+  
+
+  /**
+  * Let our map server calculate the actual polylines for connecting the visits. Processing will take longer.
+  * @return polylines
+  **/
+  @Schema(description = "Let our map server calculate the actual polylines for connecting the visits. Processing will take longer.")
+  public Boolean isPolylines() {
+    return polylines;
+  }
+  public void setPolylines(Boolean polylines) {
+    this.polylines = polylines;
+  }
+  public Options timeUnit(TimeUnitEnum timeUnit) {
+    this.timeUnit = timeUnit;
+    return this;
+  }
+
+  
+
+  /**
+  * Calculate in minutes or seconds. Minutes is advised.
+  * @return timeUnit
+  **/
+  @Schema(description = "Calculate in minutes or seconds. Minutes is advised.")
+  public TimeUnitEnum getTimeUnit() {
+    return timeUnit;
+  }
+  public void setTimeUnit(TimeUnitEnum timeUnit) {
+    this.timeUnit = timeUnit;
+  }
+  public Options forceTypeConstraints(Boolean forceTypeConstraints) {
+    this.forceTypeConstraints = forceTypeConstraints;
+    return this;
+  }
+
+  
+
+  /**
+  * If yes, then the type constraints violations are not allowed. Only do this when you are sure about type definitions.
+  * @return forceTypeConstraints
+  **/
+  @Schema(description = "If yes, then the type constraints violations are not allowed. Only do this when you are sure about type definitions.")
+  public Boolean isForceTypeConstraints() {
+    return forceTypeConstraints;
+  }
+  public void setForceTypeConstraints(Boolean forceTypeConstraints) {
+    this.forceTypeConstraints = forceTypeConstraints;
   }
   @Override
   public boolean equals(java.lang.Object o) {
@@ -186,12 +289,15 @@ public class Options {
         Objects.equals(this.allowOvertime, options.allowOvertime) &&
         Objects.equals(this.overconstrained, options.overconstrained) &&
         Objects.equals(this.minimizeVehicleUse, options.minimizeVehicleUse) &&
-        Objects.equals(this.vehicleSetupCost, options.vehicleSetupCost);
+        Objects.equals(this.traffic, options.traffic) &&
+        Objects.equals(this.polylines, options.polylines) &&
+        Objects.equals(this.timeUnit, options.timeUnit) &&
+        Objects.equals(this.forceTypeConstraints, options.forceTypeConstraints);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(profile, allowOvertime, overconstrained, minimizeVehicleUse, vehicleSetupCost);
+    return java.util.Objects.hash(profile, allowOvertime, overconstrained, minimizeVehicleUse, traffic, polylines, timeUnit, forceTypeConstraints);
   }
 
   @Override
@@ -203,7 +309,10 @@ public class Options {
     sb.append("    allowOvertime: ").append(toIndentedString(allowOvertime)).append("\n");
     sb.append("    overconstrained: ").append(toIndentedString(overconstrained)).append("\n");
     sb.append("    minimizeVehicleUse: ").append(toIndentedString(minimizeVehicleUse)).append("\n");
-    sb.append("    vehicleSetupCost: ").append(toIndentedString(vehicleSetupCost)).append("\n");
+    sb.append("    traffic: ").append(toIndentedString(traffic)).append("\n");
+    sb.append("    polylines: ").append(toIndentedString(polylines)).append("\n");
+    sb.append("    timeUnit: ").append(toIndentedString(timeUnit)).append("\n");
+    sb.append("    forceTypeConstraints: ").append(toIndentedString(forceTypeConstraints)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -73,12 +73,12 @@ Please follow the [installation](#installation) instruction and execute the foll
 import io.solvice.routing.api.client.*;
 import io.solvice.routing.api.client.auth.*;
 import io.solvice.routing.api.client.model.*;
-import io.solvice.routing.api.client.api.PdpApi;
+import io.solvice.routing.api.client.api.JobsApi;
 
 import java.io.File;
 import java.util.*;
 
-public class PdpApiExample {
+public class JobsApiExample {
 
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
@@ -87,97 +87,13 @@ public class PdpApiExample {
         basicAuth.setUsername("YOUR USERNAME");
         basicAuth.setPassword("YOUR PASSWORD");
 
-        PdpApi apiInstance = new PdpApi();
+        JobsApi apiInstance = new JobsApi();
         UUID jobId = new UUID(); // UUID | The job ID.
         try {
             Job result = apiInstance.getJob(jobId);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling PdpApi#getJob");
-            e.printStackTrace();
-        }
-    }
-}
-import io.solvice.routing.api.client.*;
-import io.solvice.routing.api.client.auth.*;
-import io.solvice.routing.api.client.model.*;
-import io.solvice.routing.api.client.api.PdpApi;
-
-import java.io.File;
-import java.util.*;
-
-public class PdpApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        // Configure HTTP basic authorization: basicAuth
-        HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
-        basicAuth.setUsername("YOUR USERNAME");
-        basicAuth.setPassword("YOUR PASSWORD");
-
-        PdpApi apiInstance = new PdpApi();
-        String jobId = "jobId_example"; // String | The job ID.
-        try {
-            Job result = apiInstance.getJobStatus(jobId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling PdpApi#getJobStatus");
-            e.printStackTrace();
-        }
-    }
-}
-import io.solvice.routing.api.client.*;
-import io.solvice.routing.api.client.auth.*;
-import io.solvice.routing.api.client.model.*;
-import io.solvice.routing.api.client.api.PdpApi;
-
-import java.io.File;
-import java.util.*;
-
-public class PdpApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        // Configure HTTP basic authorization: basicAuth
-        HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
-        basicAuth.setUsername("YOUR USERNAME");
-        basicAuth.setPassword("YOUR PASSWORD");
-
-        PdpApi apiInstance = new PdpApi();
-        UUID jobId = new UUID(); // UUID | The job ID.
-        try {
-            RoutingSolution result = apiInstance.getSolutionPDP(jobId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling PdpApi#getSolutionPDP");
-            e.printStackTrace();
-        }
-    }
-}
-import io.solvice.routing.api.client.*;
-import io.solvice.routing.api.client.auth.*;
-import io.solvice.routing.api.client.model.*;
-import io.solvice.routing.api.client.api.PdpApi;
-
-import java.io.File;
-import java.util.*;
-
-public class PdpApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        // Configure HTTP basic authorization: basicAuth
-        HttpBasicAuth basicAuth = (HttpBasicAuth) defaultClient.getAuthentication("basicAuth");
-        basicAuth.setUsername("YOUR USERNAME");
-        basicAuth.setPassword("YOUR PASSWORD");
-
-        PdpApi apiInstance = new PdpApi();
-        PDP body = new PDP(); // PDP | PDP problem solve request
-        try {
-            Job result = apiInstance.solvePDP(body);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling PdpApi#solvePDP");
+            System.err.println("Exception when calling JobsApi#getJob");
             e.printStackTrace();
         }
     }
@@ -190,19 +106,18 @@ All URIs are relative to *https://api.solvice.io/*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*PdpApi* | [**getJob**](docs/PdpApi.md#getJob) | **GET** /jobs/{jobId} | Job
+*JobsApi* | [**getJob**](docs/JobsApi.md#getJob) | **GET** /jobs/{jobId} | Job
 *PdpApi* | [**getJobStatus**](docs/PdpApi.md#getJobStatus) | **GET** /jobs/{jobId}/status | Status
 *PdpApi* | [**getSolutionPDP**](docs/PdpApi.md#getSolutionPDP) | **GET** /jobs/{jobId}/solution#PDP | Solution PDP
 *PdpApi* | [**solvePDP**](docs/PdpApi.md#solvePDP) | **POST** /solve#PDP | Solve a PDP problem
 *PvrpApi* | [**solvePVRP**](docs/PvrpApi.md#solvePVRP) | **POST** /solve#PVRP | Solve a PVRP problem
+*RoutingApi* | [**solve**](docs/RoutingApi.md#solve) | **POST** /solve | solve a problem
 *SolviceApiApi* | [**getJob**](docs/SolviceApiApi.md#getJob) | **GET** /jobs/{jobId} | Job
 *SolviceApiApi* | [**getJobStatus**](docs/SolviceApiApi.md#getJobStatus) | **GET** /jobs/{jobId}/status | Status
 *SolviceApiApi* | [**getSolution**](docs/SolviceApiApi.md#getSolution) | **GET** /jobs/{jobId}/solution | Solution
 *SolviceApiApi* | [**getStats**](docs/SolviceApiApi.md#getStats) | **GET** /v1/stats/{jobId} | Statistics
-*TmpApi* | [**getJob**](docs/TmpApi.md#getJob) | **GET** /jobs/{jobId} | Job
 *TmpApi* | [**getJobStatus**](docs/TmpApi.md#getJobStatus) | **GET** /jobs/{jobId}/status | Status
 *TmpApi* | [**solveTMP**](docs/TmpApi.md#solveTMP) | **POST** /solve#TMP | solve a TMP problem
-*VrpApi* | [**getJob**](docs/VrpApi.md#getJob) | **GET** /jobs/{jobId} | Job
 *VrpApi* | [**getJobStatus**](docs/VrpApi.md#getJobStatus) | **GET** /jobs/{jobId}/status | Status
 *VrpApi* | [**getSolutionVrp**](docs/VrpApi.md#getSolutionVrp) | **GET** /jobs/{jobId}/solution#VRP | Solution VRP
 *VrpApi* | [**solveVRP**](docs/VrpApi.md#solveVRP) | **POST** /solve#VRP | solve a VRP problem
@@ -221,6 +136,8 @@ Class | Method | HTTP request | Description
  - [PDP](docs/PDP.md)
  - [PVRP](docs/PVRP.md)
  - [RoutingSolution](docs/RoutingSolution.md)
+ - [RoutingSolutionScore](docs/RoutingSolutionScore.md)
+ - [RoutingSolutionUnresolved](docs/RoutingSolutionUnresolved.md)
  - [Sales](docs/Sales.md)
  - [Solver](docs/Solver.md)
  - [Stats](docs/Stats.md)

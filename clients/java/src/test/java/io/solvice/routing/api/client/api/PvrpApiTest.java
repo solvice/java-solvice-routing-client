@@ -13,6 +13,7 @@
 package io.solvice.routing.api.client.api;
 
 import io.solvice.routing.api.client.ApiException;
+import io.solvice.routing.api.client.model.InputError;
 import io.solvice.routing.api.client.model.Job;
 import io.solvice.routing.api.client.model.PVRP;
 import org.junit.Test;

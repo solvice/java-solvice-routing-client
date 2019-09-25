@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** |  | 
+**name** | **str** | Address (unique) | 
 **latitude** | **float** |  | 
 **longitude** | **float** |  | 
 

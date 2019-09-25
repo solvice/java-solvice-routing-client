@@ -46,10 +46,10 @@ public class StatsGoals {
   
 
   /**
-  * Get goal
+  * Goal name
   * @return goal
   **/
-  @Schema(description = "")
+  @Schema(description = "Goal name")
   public String getGoal() {
     return goal;
   }
@@ -64,10 +64,10 @@ public class StatsGoals {
   
 
   /**
-  * Get weight
+  * Weight total for goal.
   * @return weight
   **/
-  @Schema(description = "")
+  @Schema(description = "Weight total for goal.")
   public Integer getWeight() {
     return weight;
   }

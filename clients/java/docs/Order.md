@@ -5,7 +5,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** | Unique name of an order | 
 **location** | **String** | Location of an order; should be in location list. | 
-**activity** | [**ActivityEnum**](#ActivityEnum) | activity type |  [optional]
+**activity** | [**ActivityEnum**](#ActivityEnum) | Activity type. When defining a PDP problem, be sure to have both a pickup and a delivery activity for the same ride. See ride. |  [optional]
+**ride** | **String** | Only applicable for PDP. Use the same ride string for a pickup and a delivery activity. |  [optional]
 **priority** | **Integer** | Priority allows you to make certain visits a priority over others. In some cases you have more visits than you can serve, resulting in a few unserved. But if you want to make sure your high priority visits take precedence, use this parameter and set it to 100.  |  [optional]
 **duration** | **Integer** | Duration of the service in minutes |  [optional]
 **demand** | **Integer** | Load in cargo for capacity type 1. |  [optional]

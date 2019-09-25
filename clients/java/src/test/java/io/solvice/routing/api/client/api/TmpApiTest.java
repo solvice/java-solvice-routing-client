@@ -13,9 +13,9 @@
 package io.solvice.routing.api.client.api;
 
 import io.solvice.routing.api.client.ApiException;
+import io.solvice.routing.api.client.model.InputError;
 import io.solvice.routing.api.client.model.Job;
 import io.solvice.routing.api.client.model.TMP;
-import java.util.UUID;
 import org.junit.Test;
 import org.junit.Ignore;
 
@@ -32,21 +32,6 @@ public class TmpApiTest {
 
     private final TmpApi api = new TmpApi();
 
-    /**
-     * Job
-     *
-     * When posting a new solve request, this job can be checked again under this endpoint. In fact, it should be the entire request posted as-is.
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void getJobTest() throws ApiException {
-        UUID jobId = null;
-        Job response = api.getJob(jobId);
-
-        // TODO: test validations
-    }
     /**
      * Status
      *

@@ -68,10 +68,10 @@ public class Stats {
   }
 
   /**
-  * Get goals
+  * List of unresolved goals.
   * @return goals
   **/
-  @Schema(description = "")
+  @Schema(description = "List of unresolved goals.")
   public List<StatsGoals> getGoals() {
     return goals;
   }

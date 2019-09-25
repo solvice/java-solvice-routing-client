@@ -42,10 +42,10 @@ public class StatsConflicts {
   
 
   /**
-  * Get weight
+  * Specific weight for unresolved goal reasons.
   * @return weight
   **/
-  @Schema(description = "")
+  @Schema(description = "Specific weight for unresolved goal reasons.")
   public Integer getWeight() {
     return weight;
   }

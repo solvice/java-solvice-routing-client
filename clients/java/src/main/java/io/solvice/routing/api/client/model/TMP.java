@@ -19,6 +19,8 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.solvice.routing.api.client.model.Sales;
+import io.solvice.routing.api.client.model.SolveRequest;
+import io.solvice.routing.api.client.model.Solver;
 import io.solvice.routing.api.client.model.Store;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
@@ -29,34 +31,13 @@ import java.util.List;
  * TMP
  */
 
-public class TMP {
-
-  @SerializedName("solver")
-  private String solver = null;
+public class TMP extends SolveRequest {
 
   @SerializedName("sales")
   private List<Sales> sales = new ArrayList<Sales>();
 
   @SerializedName("stores")
   private List<Store> stores = new ArrayList<Store>();
-  public TMP solver(String solver) {
-    this.solver = solver;
-    return this;
-  }
-
-  
-
-  /**
-  * Get solver
-  * @return solver
-  **/
-  @Schema(example = "TMP", required = true, description = "")
-  public String getSolver() {
-    return solver;
-  }
-  public void setSolver(String solver) {
-    this.solver = solver;
-  }
   public TMP sales(List<Sales> sales) {
     this.sales = sales;
     return this;
@@ -108,22 +89,21 @@ public class TMP {
       return false;
     }
     TMP TMP = (TMP) o;
-    return Objects.equals(this.solver, TMP.solver) &&
-        Objects.equals(this.sales, TMP.sales) &&
-        Objects.equals(this.stores, TMP.stores);
+    return Objects.equals(this.sales, TMP.sales) &&
+        Objects.equals(this.stores, TMP.stores) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(solver, sales, stores);
+    return java.util.Objects.hash(sales, stores, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class TMP {\n");
-    
-    sb.append("    solver: ").append(toIndentedString(solver)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    sales: ").append(toIndentedString(sales)).append("\n");
     sb.append("    stores: ").append(toIndentedString(stores)).append("\n");
     sb.append("}");

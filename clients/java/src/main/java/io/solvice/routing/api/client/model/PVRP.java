@@ -21,6 +21,8 @@ import com.google.gson.stream.JsonWriter;
 import io.solvice.routing.api.client.model.Location;
 import io.solvice.routing.api.client.model.Options;
 import io.solvice.routing.api.client.model.Order;
+import io.solvice.routing.api.client.model.PVRPPeriod;
+import io.solvice.routing.api.client.model.SolveRequest;
 import io.solvice.routing.api.client.model.Solver;
 import io.solvice.routing.api.client.model.Vehicle;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,10 +34,10 @@ import java.util.List;
  * PVRP
  */
 
-public class PVRP {
+public class PVRP extends SolveRequest {
 
-  @SerializedName("solver")
-  private Solver solver = null;
+  @SerializedName("period")
+  private PVRPPeriod period = null;
 
   @SerializedName("locations")
   private List<Location> locations = new ArrayList<Location>();
@@ -48,23 +50,23 @@ public class PVRP {
 
   @SerializedName("options")
   private Options options = null;
-  public PVRP solver(Solver solver) {
-    this.solver = solver;
+  public PVRP period(PVRPPeriod period) {
+    this.period = period;
     return this;
   }
 
   
 
   /**
-  * Get solver
-  * @return solver
+  * Get period
+  * @return period
   **/
   @Schema(required = true, description = "")
-  public Solver getSolver() {
-    return solver;
+  public PVRPPeriod getPeriod() {
+    return period;
   }
-  public void setSolver(Solver solver) {
-    this.solver = solver;
+  public void setPeriod(PVRPPeriod period) {
+    this.period = period;
   }
   public PVRP locations(List<Location> locations) {
     this.locations = locations;
@@ -156,24 +158,25 @@ public class PVRP {
       return false;
     }
     PVRP PVRP = (PVRP) o;
-    return Objects.equals(this.solver, PVRP.solver) &&
+    return Objects.equals(this.period, PVRP.period) &&
         Objects.equals(this.locations, PVRP.locations) &&
         Objects.equals(this.fleet, PVRP.fleet) &&
         Objects.equals(this.orders, PVRP.orders) &&
-        Objects.equals(this.options, PVRP.options);
+        Objects.equals(this.options, PVRP.options) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(solver, locations, fleet, orders, options);
+    return java.util.Objects.hash(period, locations, fleet, orders, options, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PVRP {\n");
-    
-    sb.append("    solver: ").append(toIndentedString(solver)).append("\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    period: ").append(toIndentedString(period)).append("\n");
     sb.append("    locations: ").append(toIndentedString(locations)).append("\n");
     sb.append("    fleet: ").append(toIndentedString(fleet)).append("\n");
     sb.append("    orders: ").append(toIndentedString(orders)).append("\n");

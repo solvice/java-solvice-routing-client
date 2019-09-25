@@ -18,9 +18,12 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import io.solvice.routing.api.client.model.RoutingSolutionScore;
+import io.solvice.routing.api.client.model.RoutingSolutionUnresolved;
 import io.solvice.routing.api.client.model.Visit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +34,56 @@ import java.util.Map;
 
 public class RoutingSolution {
 
+  @SerializedName("score")
+  private RoutingSolutionScore score = null;
+
+  @SerializedName("unresolved")
+  private List<RoutingSolutionUnresolved> unresolved = null;
+
   @SerializedName("solution")
   private Map<String, List<Visit>> solution = null;
+  public RoutingSolution score(RoutingSolutionScore score) {
+    this.score = score;
+    return this;
+  }
+
+  
+
+  /**
+  * Get score
+  * @return score
+  **/
+  @Schema(description = "")
+  public RoutingSolutionScore getScore() {
+    return score;
+  }
+  public void setScore(RoutingSolutionScore score) {
+    this.score = score;
+  }
+  public RoutingSolution unresolved(List<RoutingSolutionUnresolved> unresolved) {
+    this.unresolved = unresolved;
+    return this;
+  }
+
+  public RoutingSolution addUnresolvedItem(RoutingSolutionUnresolved unresolvedItem) {
+    if (this.unresolved == null) {
+      this.unresolved = new ArrayList<RoutingSolutionUnresolved>();
+    }
+    this.unresolved.add(unresolvedItem);
+    return this;
+  }
+
+  /**
+  * The unresolved constraints show the list of constraints that could not achieve feasibility for the current solve.
+  * @return unresolved
+  **/
+  @Schema(description = "The unresolved constraints show the list of constraints that could not achieve feasibility for the current solve.")
+  public List<RoutingSolutionUnresolved> getUnresolved() {
+    return unresolved;
+  }
+  public void setUnresolved(List<RoutingSolutionUnresolved> unresolved) {
+    this.unresolved = unresolved;
+  }
   public RoutingSolution solution(Map<String, List<Visit>> solution) {
     this.solution = solution;
     return this;
@@ -66,12 +117,14 @@ public class RoutingSolution {
       return false;
     }
     RoutingSolution routingSolution = (RoutingSolution) o;
-    return Objects.equals(this.solution, routingSolution.solution);
+    return Objects.equals(this.score, routingSolution.score) &&
+        Objects.equals(this.unresolved, routingSolution.unresolved) &&
+        Objects.equals(this.solution, routingSolution.solution);
   }
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(solution);
+    return java.util.Objects.hash(score, unresolved, solution);
   }
 
   @Override
@@ -79,6 +132,8 @@ public class RoutingSolution {
     StringBuilder sb = new StringBuilder();
     sb.append("class RoutingSolution {\n");
     
+    sb.append("    score: ").append(toIndentedString(score)).append("\n");
+    sb.append("    unresolved: ").append(toIndentedString(unresolved)).append("\n");
     sb.append("    solution: ").append(toIndentedString(solution)).append("\n");
     sb.append("}");
     return sb.toString();

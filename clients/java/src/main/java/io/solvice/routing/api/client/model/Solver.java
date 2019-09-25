@@ -13,6 +13,7 @@
 package io.solvice.routing.api.client.model;
 
 import java.util.Objects;
+import io.swagger.v3.oas.annotations.media.Schema;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 /**
- * Gets or Sets Solver
+ * Required solver enum definition. Please specify.
  */
 @JsonAdapter(Solver.Adapter.class)
 public enum Solver {

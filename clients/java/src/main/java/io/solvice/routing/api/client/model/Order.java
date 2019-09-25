@@ -37,7 +37,7 @@ public class Order {
   @SerializedName("location")
   private String location = null;
   /**
-   * activity type
+   * Activity type. When defining a PDP problem, be sure to have both a pickup and a delivery activity for the same ride. See ride.
    */
   @JsonAdapter(ActivityEnum.Adapter.class)
   public enum ActivityEnum {
@@ -82,6 +82,9 @@ public class Order {
   }
   @SerializedName("activity")
   private ActivityEnum activity = ActivityEnum.PICKUP;
+
+  @SerializedName("ride")
+  private String ride = null;
 
   @SerializedName("priority")
   private Integer priority = null;
@@ -156,15 +159,33 @@ public class Order {
   
 
   /**
-  * activity type
+  * Activity type. When defining a PDP problem, be sure to have both a pickup and a delivery activity for the same ride. See ride.
   * @return activity
   **/
-  @Schema(description = "activity type")
+  @Schema(description = "Activity type. When defining a PDP problem, be sure to have both a pickup and a delivery activity for the same ride. See ride.")
   public ActivityEnum getActivity() {
     return activity;
   }
   public void setActivity(ActivityEnum activity) {
     this.activity = activity;
+  }
+  public Order ride(String ride) {
+    this.ride = ride;
+    return this;
+  }
+
+  
+
+  /**
+  * Only applicable for PDP. Use the same ride string for a pickup and a delivery activity.
+  * @return ride
+  **/
+  @Schema(description = "Only applicable for PDP. Use the same ride string for a pickup and a delivery activity.")
+  public String getRide() {
+    return ride;
+  }
+  public void setRide(String ride) {
+    this.ride = ride;
   }
   public Order priority(Integer priority) {
     this.priority = priority;
@@ -395,6 +416,7 @@ public class Order {
     return Objects.equals(this.name, order.name) &&
         Objects.equals(this.location, order.location) &&
         Objects.equals(this.activity, order.activity) &&
+        Objects.equals(this.ride, order.ride) &&
         Objects.equals(this.priority, order.priority) &&
         Objects.equals(this.duration, order.duration) &&
         Objects.equals(this.demand, order.demand) &&
@@ -409,7 +431,7 @@ public class Order {
 
   @Override
   public int hashCode() {
-    return java.util.Objects.hash(name, location, activity, priority, duration, demand, demand2, type, windows, durationSquash, dateWindows, allowedVehicles, disallowedVehicles);
+    return java.util.Objects.hash(name, location, activity, ride, priority, duration, demand, demand2, type, windows, durationSquash, dateWindows, allowedVehicles, disallowedVehicles);
   }
 
   @Override
@@ -420,6 +442,7 @@ public class Order {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    activity: ").append(toIndentedString(activity)).append("\n");
+    sb.append("    ride: ").append(toIndentedString(ride)).append("\n");
     sb.append("    priority: ").append(toIndentedString(priority)).append("\n");
     sb.append("    duration: ").append(toIndentedString(duration)).append("\n");
     sb.append("    demand: ").append(toIndentedString(demand)).append("\n");

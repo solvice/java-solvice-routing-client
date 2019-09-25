@@ -3,9 +3,9 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**location** | **String** |  |  [optional]
-**order** | **String** |  |  [optional]
-**arrival** | **Integer** |  |  [optional]
+**location** | **String** | Location name. |  [optional]
+**order** | **String** | Order name. |  [optional]
+**arrival** | **Integer** | Arrival at visit |  [optional]
 **finish** | **Integer** |  |  [optional]
 **drive** | **Integer** | Drive time to next location in minutes. |  [optional]
 **distance** | **Integer** | Distance to next location in meters. |  [optional]

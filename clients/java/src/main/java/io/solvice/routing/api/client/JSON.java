@@ -48,6 +48,21 @@ public class JSON {
 
     public static GsonBuilder createGson() {
         GsonFireBuilder fireBuilder = new GsonFireBuilder()
+          .registerTypeSelector(SolveRequest.class, new TypeSelector<SolveRequest>() {
+            @Override
+            public Class<? extends SolveRequest> getClassForElement(JsonElement readElement) {
+                Map<String, Class<? extends SolveRequest>> classByDiscriminatorValue = new HashMap<>();
+
+                    classByDiscriminatorValue.put("PDP".toUpperCase(), PDP.class);
+                    classByDiscriminatorValue.put("PVRP".toUpperCase(), PVRP.class);
+                    classByDiscriminatorValue.put("TMP".toUpperCase(), TMP.class);
+                    classByDiscriminatorValue.put("VRP".toUpperCase(), VRP.class);
+                    classByDiscriminatorValue.put("SolveRequest".toUpperCase(), SolveRequest.class);
+                return getClassByDiscriminator(
+                            classByDiscriminatorValue,
+                            getDiscriminatorValue(readElement, ""));
+            }
+          })
         ;
         return fireBuilder.createGsonBuilder();
     }

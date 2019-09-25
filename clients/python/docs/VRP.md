@@ -3,7 +3,6 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**solver** | **str** |  | 
 **locations** | [**list[Location]**](Location.md) |  | 
 **fleet** | [**list[Vehicle]**](Vehicle.md) |  | 
 **orders** | [**list[Order]**](Order.md) |  | 
