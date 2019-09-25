@@ -17,7 +17,7 @@ tags:
       Welcome to the Solvice API! You can use our API to access Solvice API endpoints, which can get information on your solved jobs, their statuses and of course post new solve jobs.
 
 
-      # Getting started
+      ## Getting started
 
       > Test our API in just one command
 
@@ -46,7 +46,8 @@ tags:
 
       Alternatively, if you have no idea on how long a job will need to solve: we can help you out. Just don't add the seconds parameter and we will let you know when we have finished.
       We can let you know, either when polling the status or if you add a webhook.
-
+  - name: Vehicle routing
+    description: |
 
       ## Vehicle routing
       There are different types of problems the Solvice Solver can handle. We differentiate between 3 types:
@@ -66,8 +67,8 @@ tags:
 
       ### PVRP
       Multi day (Periodic) Vehicle Routing Problem (PVRP).
-      Examples:
-       -
+      This model is excellent for planning multiple days or even weeks. Lots of field services require this setup.
+
 
 
       ## Differences with Google
@@ -83,20 +84,103 @@ tags:
        - C#
        - Python
        - nodejs
+
+
       Check out our GitHub repo: https://github.com/solvice/solvice-routing-client/
-  - name: VRP
-  - name: PDP
-  - name: TMP
+  - name: Jobs
+    description: 'The Jobs endpoint allows to retrieve information of a posted request, its status, the score or even detailed statistics.'
+  - name: Routing
+    description: |
+      Post a new solve request to the Routing Engine.
+
+      The routing engine can accept different problems:
+       - VRP
+       - PDP
+       - PVRP
+       - TMP
+
+      ## VRP
+      Each problem has its own structure. See request body schema for specific details.
+      The base case is the Vehicle Routing Problem. All other problems expand on it.
+
+      ## PDP
+
+
+
+      A special case of the classical Vehicle Routing Problem is the Pickup and Delivery Problem. Each order has a pickup location and a drop-off location that are mutually dependent. An item can only be dropped off after it has been picked up by the same driver.
+
+      The Solvice solver will find the optimal routes to do all your orders, so it may often occur that you pick up multiple orders before you drop them off. If you specify capacity constraints, it will ensure that your vehicles won't try to carry more than they can hold.
+
+
+      ```
+       {
+           "name": "pickup in Ghent",
+           "location": "Ghent, Centre",
+           "activity": "PICKUP",
+           "duration": 10,
+           "ride": "order0"
+       },
+       {
+           "name": "Delivery in Brussels",
+           "location": "Brussels, Centre",
+           "activity": "DROPOFF",
+           "duration": 10,
+           "ride": "order0"
+       }
+      ```
+
+      First off, but most importantly, you should define that the problem is a PDP, by setting the solver property to "PDP" in the payload.
+
+      Usage of Pickup and Delivery API is mostly identical with the normal Vehicle Routing API, with only one difference: the way we define pickup and delivery orders. If an item has to reach a certain location, you have to pick it up first (i.e. create a pickup order with `"activity" : "pickup"`) and then drop it of in another location (i.e. create a dropoff order with `"activity" : "dropoff"`).
+
+      ## PVRP
+      Another special case of the classical Vehicle Routing Problem is the Periodic VRP. When planning for multiple days, the optimisation gets even more complicated.
+
+      First off, but most importantly, you should define that the problem is a PVRP, by setting the solver property to `"PVRP"` in the payload.
+  - name: Solution
+    description: Retrieve the optimal solution to the problem.
+  - name: FAQ
+    description: |
+
+      ## Examples
+
+      ### Open-ended routes
+      The end-location on a vehicle is optional and can be omitted to generate open-ended routes.
+      If you are generating the routes for the entire day, and you want to make sure that the driver reaches the end location at the end of the shift, you can provide an end-location. If the driver needs to return to a depot, the algorithm can utilize this final leg back to make a few visits along the way.
+      However, if you are only interested in getting all your deliveries done as soon as possible without considering where driver might be at the end of his/her shift, you may opt to leave the route open-ended.
+      On-demand businesses that need real-time routing is another great use-case where you would keep the routes open-ended. As new orders come in dynamically throughout the day, you may call the API with the real-time locations of your drivers and keep re-optimizing throughout the day, without returning home.
+
+
+      ### Capacity constraints
+      When you are delivering larger items, it is imperative that you consider capacity constraints of your vehicles. Otherwise, the optimized routes may assign more deliveries to a vehicle than it can handle in reality.
+      To enable capacity constraints, each visit must set the load parameter to a numeric value. Also, each vehicle should have a value for its capacity parameter. The values for these parameters are unit-agnostic, so they can denote whatever unit makes sense for your business operations.
+
+      For example, if you deliver small, medium, and large packages, you can specify each delivery in the smallest common denominator – in this case a small package. A medium package could be the size of 4 small packages, etc. Now you can set the maximum capacity of a vehicle to the total amount of small packages that can fit in a vehicle.
+
+
+      ### Unresolved solutions
+      What to do when we cannot reach a feasible solution?
+
+      There are two main reasons a visit may end up unserved: either it just can't fit (i.e. the problem might have too many constraints to accommodate every visit), or it's an input error (i.e. a visit may be incompatible in with every vehicle in the fleet).
+
+      In the first case, the reason will be returned as cannot be visited within the constraints. It basically means that we just couldn't fit it in. You can typically resolve this by either adding more vehicles, or extending the shift times, or increasing the capacities. It really depends on the situation; you might want to inspect the inputs of the visit that was unserved, and find out why it couldn't fit.
+
+      In the second case, where there is a clear reason why, we can be more helpful. As this is often due to a user input error, we provide special messages to assist the user in quickly identifying the unserved reason:
+
+      #### Reasons
+
+      | Code             | Description                                                                                                                                                          |
+      |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+      | TYPE_RESTRICTION | A visit may be of a type that none of the vehicles in the fleet can serve. This is often due to a misspelling. Can you make sure the type tags are exactly the same? |
+      | CAPACITY |    A visit may have a load greater than the capacity of any vehicle in the fleet. It simply can't fit anywhere! You might need to buy a bigger truck. Or cut the load in pieces :)                                                                                                         |
+      | TIME_WINDOW | A visit may have a time window constraint that prevents any vehicle from being able to serve it. Note that we also take the duration into account. The overlap between the time window of the visit and the driver shift times (excluding breaks) should be at least as large as the duration – or else it won't fit.                                                                                  |
 security:
   - basicAuth: []
 paths:
   '/jobs/{jobId}':
     get:
       tags:
-        - VRP
-        - PDP
-        - TMP
-        - Solvice API
+        - Jobs
       summary: Job
       operationId: getJob
       description: 'When posting a new solve request, this job can be checked again under this endpoint. In fact, it should be the entire request posted as-is.'
@@ -120,10 +204,7 @@ paths:
   '/jobs/{jobId}/status':
     get:
       tags:
-        - VRP
-        - PDP
-        - TMP
-        - Solvice API
+        - Jobs
       summary: Status
       operationId: getJobStatus
       description: Retrieve a specific job status
@@ -143,34 +224,10 @@ paths:
                 $ref: '#/components/schemas/Job'
         '404':
           description: Job not found
-  '/jobs/{jobId}/solution':
-    get:
-      tags:
-        - Solvice API
-      summary: Solution
-      description: Returns the actual solution of the job. Only present when the status is `SOLVED`.
-      operationId: getSolution
-      parameters:
-        - in: path
-          name: jobId
-          required: true
-          description: The job ID.
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: solved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Job'
-        '404':
-          description: Job not found
   '/v1/stats/{jobId}':
     get:
       tags:
-        - Solvice API
+        - Jobs
       summary: Statistics
       operationId: getStats
       parameters:
@@ -194,57 +251,13 @@ paths:
                 $ref: '#/components/schemas/Stats'
         '404':
           description: Job not found
-  '/solve#TMP':
+  /solve:
     post:
       tags:
-        - TMP
-      summary: solve a TMP problem
-      operationId: solveTMP
-      description: Solves a TMP problem
-      responses:
-        '200':
-          description: solved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Job'
-        '400':
-          $ref: '#/components/responses/bad'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TMP'
-        description: TMP problem solve request
-  '/solve#VRP':
-    post:
-      tags:
-        - VRP
-      summary: solve a VRP problem
-      operationId: solveVRP
-      description: Adds an item to the system
-      responses:
-        '200':
-          description: solved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Job'
-        '400':
-          $ref: '#/components/responses/bad'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VRP'
-        description: VRP problem solve request
-  '/solve#PDP':
-    post:
-      tags:
-        - PDP
-      summary: Solve a PDP problem
-      operationId: solvePDP
-      description: Pickup and delivery problems
+        - Routing
+      summary: Solve
+      operationId: solve
+      description: Solves any problem defined underneath. Result is the job id and its status. Fetch the solution afterwards in the Solution endpoint.
       responses:
         '200':
           description: OK
@@ -258,61 +271,46 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PDP'
-        description: PDP problem solve request
-  '/solve#PVRP':
+              anyOf:
+                - $ref: '#/components/schemas/VRP'
+                - $ref: '#/components/schemas/PVRP'
+                - $ref: '#/components/schemas/PDP'
+        description: Problem solve request
+  /evaluate:
     post:
       tags:
-        - PVRP
-      summary: Solve a PVRP problem
-      operationId: solvePVRP
-      description: Periodic vehicle routing problems
+        - Routing
+      summary: Evaluate
+      operationId: evaluate
+      description: Evaluates any problem defined underneath. Result is the job id and its status. Fetch the solution immediately in the response.
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Job'
+                anyOf:
+                  - $ref: '#/components/schemas/VRP'
+                  - $ref: '#/components/schemas/PVRP'
+                  - $ref: '#/components/schemas/PDP'
         '400':
           $ref: '#/components/responses/bad'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PVRP'
-        description: PVRP problem solve request
-  '/jobs/{jobId}/solution#VRP':
+              anyOf:
+                - $ref: '#/components/schemas/VRP'
+                - $ref: '#/components/schemas/PVRP'
+                - $ref: '#/components/schemas/PDP'
+        description: Problem solve request
+  '/jobs/{jobId}/solution':
     get:
       tags:
-        - VRP
-      summary: Solution VRP
-      operationId: getSolutionVrp
-      description: Returns the actual solution of the VRP. Only present when the status is `SOLVED`.
-      parameters:
-        - in: path
-          name: jobId
-          required: true
-          description: The job ID.
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RoutingSolution'
-        '401':
-          description: Job not found
-  '/jobs/{jobId}/solution#PDP':
-    get:
-      tags:
-        - PDP
-      summary: Solution PDP
-      operationId: getSolutionPDP
-      description: Returns the actual solution of the PDP. Only present when the status is `SOLVED`.
+        - Solution
+      summary: Solution
+      operationId: getSolution
+      description: Returns the actual solution of the routing problem. Only present when the status is `SOLVED`.
       parameters:
         - in: path
           name: jobId
@@ -333,122 +331,145 @@ paths:
 components:
   schemas:
     VRP:
-      type: object
-      required:
-        - solver
-        - locations
-        - orders
-        - fleet
-        - options
-      properties:
-        solver:
-          $ref: '#/components/schemas/Solver'
-          example: VRP
-        locations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Location'
-        fleet:
-          type: array
-          items:
-            $ref: '#/components/schemas/Vehicle'
-        orders:
-          type: array
-          items:
-            $ref: '#/components/schemas/Order'
-        options:
-          $ref: '#/components/schemas/options'
+      allOf:
+        - $ref: '#/components/schemas/SolveRequest'
+        - type: object
+          required:
+            - locations
+            - orders
+            - fleet
+            - options
+          properties:
+            locations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Location'
+            fleet:
+              type: array
+              items:
+                $ref: '#/components/schemas/Vehicle'
+            orders:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
+            options:
+              $ref: '#/components/schemas/options'
     PDP:
-      type: object
-      required:
-        - solver
-        - locations
-        - orders
-        - fleet
-        - options
-      properties:
-        solver:
-          $ref: '#/components/schemas/Solver'
-          example: PDP
-        locations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Location'
-        fleet:
-          type: array
-          items:
-            $ref: '#/components/schemas/Vehicle'
-        orders:
-          type: array
-          items:
-            $ref: '#/components/schemas/Order'
-        options:
-          $ref: '#/components/schemas/options'
+      allOf:
+        - $ref: '#/components/schemas/SolveRequest'
+        - type: object
+          required:
+            - locations
+            - orders
+            - fleet
+            - options
+          properties:
+            locations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Location'
+            fleet:
+              type: array
+              items:
+                $ref: '#/components/schemas/Vehicle'
+            orders:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
+            options:
+              $ref: '#/components/schemas/options'
     PVRP:
-      type: object
-      required:
-        - solver
-        - locations
-        - orders
-        - fleet
-        - options
-      properties:
-        solver:
-          $ref: '#/components/schemas/Solver'
-          example: PVRP
-        locations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Location'
-        fleet:
-          type: array
-          items:
-            $ref: '#/components/schemas/Vehicle'
-        orders:
-          type: array
-          items:
-            $ref: '#/components/schemas/Order'
-        options:
-          $ref: '#/components/schemas/options'
+      allOf:
+        - $ref: '#/components/schemas/SolveRequest'
+        - type: object
+          required:
+            - period
+            - locations
+            - orders
+            - fleet
+            - options
+          properties:
+            period:
+              type: object
+              description: Define the planning period.
+              properties:
+                start:
+                  type: string
+                  format: date
+                  example: '2017-01-01'
+                  description: Start date of the planning period.
+                end:
+                  type: string
+                  format: date
+                  example: '2017-01-31'
+                  description: End date of the planning period. Not inclusive.
+            locations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Location'
+            fleet:
+              type: array
+              items:
+                $ref: '#/components/schemas/Vehicle'
+            orders:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
+            options:
+              $ref: '#/components/schemas/options'
     options:
       type: object
+      description: Options block to tweak the Routing Engine.
       properties:
         profile:
           type: string
+          description: All vehicles are either CAR or TRUCK.
           enum:
             - CAR
             - TRUCK
         allow_overtime:
-          type: string
+          type: boolean
           description: |
             If the `shiftend` should be a soft condition to take into account. When `allow_overtime: true` then some orders will be planned after `shiftend`.
         overconstrained:
           type: boolean
           description: |
-            If you do not need to assign everything to
+            If you do not need to assign every order to a vehicle, then set `overconstrained: true`.
         minimize_vehicle_use:
           type: boolean
-          description: sd
-        vehicle_setup_cost:
-          type: number
-    TMP:
-      type: object
-      required:
-        - solver
-        - sales
-        - stores
-      properties:
-        solver:
+          description: Minimise the vehicle useage or minimise total travel time. Two different objective functions.
+        traffic:
+          type: integer
+          description: Modifier for traffic.
+        polylines:
+          type: boolean
+          description: Let our map server calculate the actual polylines for connecting the visits. Processing will take longer.
+        timeUnit:
           type: string
-          example: TMP
-        sales:
-          type: array
-          items:
-            $ref: '#/components/schemas/Sales'
-        stores:
-          type: array
-          items:
-            $ref: '#/components/schemas/Store'
+          enum:
+            - MINUTES
+            - SECONDS
+          description: Calculate in minutes or seconds. Minutes is advised.
+          default: MINUTES
+        force_type_constraints:
+          type: boolean
+          description: 'If yes, then the type constraints violations are not allowed. Only do this when you are sure about type definitions.'
+    TMP:
+      allOf:
+        - $ref: '#/components/schemas/SolveRequest'
+        - type: object
+          required:
+            - sales
+            - stores
+          properties:
+            sales:
+              type: array
+              items:
+                $ref: '#/components/schemas/Sales'
+            stores:
+              type: array
+              items:
+                $ref: '#/components/schemas/Store'
     Location:
       type: object
       required:
@@ -582,8 +603,11 @@ components:
             - DROPOFF
             - EXECUTE
             - BREAK
-          description: activity type
+          description: 'Activity type. When defining a PDP problem, be sure to have both a pickup and a delivery activity for the same ride. See ride.'
           default: PICKUP
+        ride:
+          type: string
+          description: Only applicable for PDP. Use the same ride string for a pickup and a delivery activity.
         priority:
           type: integer
           minimum: 0
@@ -721,6 +745,18 @@ components:
         duration:
           type: integer
           example: 15
+    SolveRequest:
+      type: object
+      required:
+        - solver
+      properties:
+        hook:
+          description: Webhook endpoint to receive POST request with the id.
+          type: string
+          format: uri
+          example: 'http://my-backend.com/hook-endpoint'
+        solver:
+          $ref: '#/components/schemas/Solver'
     Job:
       type: object
       properties:
@@ -741,13 +777,16 @@ components:
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         goals:
           type: array
+          description: List of unresolved goals.
           items:
             type: object
             properties:
               goal:
                 type: string
+                description: Goal name
               weight:
                 type: integer
+                description: Weight total for goal.
               conflicts:
                 type: array
                 items:
@@ -755,6 +794,7 @@ components:
                   properties:
                     weight:
                       type: integer
+                      description: Specific weight for unresolved goal reasons.
                     reasons:
                       type: array
                       items:
@@ -846,6 +886,7 @@ components:
           description: Coordinates in WSG84
     Solver:
       type: string
+      description: Required solver enum definition. Please specify.
       enum:
         - VRP
         - PDP
