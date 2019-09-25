@@ -2,7 +2,7 @@
   "name": "onroute-api",
   "version": "1.0.0",
   "dependencies": {
-    "swagger-repo": "^2.0.0-rc.11"
+    "swagger-repo": "^2.0.0-rc.15"
   },
   "private": true,
   "scripts": {
@@ -12,4 +12,3 @@
     "gh-pages": "swagger-repo gh-pages"
   }
 }
-
