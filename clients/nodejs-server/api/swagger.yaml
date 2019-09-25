@@ -1,0 +1,347 @@
+openapi: 3.0.0
+info:
+  title: Solvice API
+  version: 1.0.0-oas3
+  x-logo:
+    url: logo.png
+    altText: OnRoute API
+servers:
+- url: https://api.solvice.io/
+security:
+- basicAuth: []
+tags:
+- name: VRP
+- name: PDP
+- name: TMP
+paths:
+  /solve#TMP:
+    post:
+      tags:
+      - TMP
+      summary: solve a TMP problem
+      description: Solves a TMP problem
+      operationId: solveTMP
+      requestBody:
+        description: TMP problem solve request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TMP'
+      responses:
+        200:
+          description: solved
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+      x-swagger-router-controller: TMP
+  /solve#VRP:
+    post:
+      tags:
+      - VRP
+      summary: solve a VRP problem
+      description: Adds an item to the system
+      operationId: solveVRP
+      requestBody:
+        description: VRP problem solve request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VRP'
+      responses:
+        200:
+          description: solved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+      x-swagger-router-controller: VRP
+  /jobs/{jobId}:
+    get:
+      tags:
+      - VRP
+      - PDP
+      - TMP
+      summary: gets a job
+      description: Retrieve a specific job
+      operationId: getJob
+      parameters:
+      - name: jobId
+        in: path
+        description: The job ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: return a job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+      x-swagger-router-controller: VRP
+  /jobs/{jobId}/status:
+    get:
+      tags:
+      - VRP
+      - PDP
+      - TMP
+      summary: gets a job status
+      description: Retrieve a specific job status
+      operationId: getJobStatus
+      parameters:
+      - name: jobId
+        in: path
+        description: The job ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: job status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+      x-swagger-router-controller: VRP
+components:
+  schemas:
+    VRP:
+      required:
+      - fleet
+      - locations
+      - options
+      - orders
+      - solver
+      type: object
+      properties:
+        solver:
+          type: string
+          example: VRP
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        fleet:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vehicle'
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        options:
+          $ref: '#/components/schemas/options'
+    options:
+      type: object
+      properties:
+        profile:
+          type: string
+        allow_overtime:
+          type: string
+        overconstrained:
+          type: boolean
+    TMP:
+      required:
+      - sales
+      - solver
+      - stores
+      type: object
+      properties:
+        solver:
+          type: string
+          example: TMP
+        sales:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sales'
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Store'
+    Location:
+      required:
+      - latitude
+      - longitude
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: Ghent, Belgium
+        latitude:
+          type: number
+          format: double
+          example: 51.0543
+        longitude:
+          type: number
+          format: double
+          example: 3.7174
+    Vehicle:
+      required:
+      - name
+      - startlocation
+      type: object
+      properties:
+        name:
+          type: string
+          example: driver1
+        startlocation:
+          type: string
+          example: locatie1
+        endlocation:
+          type: string
+          example: locatie1
+        capacity:
+          type: number
+          example: 30
+        capacity2:
+          type: number
+        shiftstart:
+          maximum: 1439
+          minimum: 0
+          type: integer
+          example: 460
+        shiftend:
+          maximum: 1439
+          minimum: 0
+          type: integer
+          example: 820
+        type:
+          type: array
+          items:
+            type: string
+    Order:
+      required:
+      - location
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: order1
+        location:
+          type: string
+          example: location1
+        duration:
+          type: number
+          example: 25
+        demand:
+          type: number
+        demand2:
+          type: number
+        type:
+          type: array
+          items:
+            type: string
+        windows:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order_windows'
+    Sales:
+      required:
+      - home
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: sales1
+        home:
+          $ref: '#/components/schemas/Location'
+        max_visits:
+          type: integer
+          description: Maximum number of total visits
+          example: 5
+        max_travel:
+          type: integer
+          description: Maximum total travel time (in km bird distance)
+          example: 1000
+        percentage:
+          type: integer
+          description: Working percentage (parttime)
+          example: 100
+        languages:
+          type: array
+          description: Languages
+          items:
+            type: string
+            example: NL
+    Store:
+      required:
+      - location
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: store1
+        location:
+          $ref: '#/components/schemas/Location'
+        frequency:
+          type: integer
+          description: Visit frequency
+          example: 3
+        potential:
+          type: integer
+          example: 5000
+        language:
+          type: string
+          example: NL
+        duration:
+          type: integer
+          example: 15
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        solver:
+          type: string
+          enum:
+          - VRP
+          - PDP
+        status:
+          type: string
+          enum:
+          - ERROR
+          - QUEUED
+          - SOLVING
+          - SOLVED
+    Order_windows:
+      type: object
+      properties:
+        starttime:
+          maximum: 1439
+          minimum: 0
+          type: integer
+          example: 530
+        endtime:
+          maximum: 1439
+          minimum: 0
+          type: integer
+          example: 550
+        hard:
+          type: boolean
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

@@ -1,0 +1,8 @@
+
+apiTitle: onroute-api
+splitSpec: false
+codeSamples: false
+swaggerUI: true
+travis: true
+repo: solvice/onroute-api-docs
+oasVersion: 3.0.0

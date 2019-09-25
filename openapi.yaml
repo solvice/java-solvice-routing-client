@@ -1,0 +1,834 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://api.solvice.io/'
+    description: Production cluster
+  - url: 'https://api-dev.solvice.io/'
+    description: Staging cluster
+info:
+  version: 1.1.3
+  title: OnRoute API
+  x-logo:
+    url: logo.png
+    altText: OnRoute API
+tags:
+  - name: Solvice API
+    description: |
+
+      Welcome to the Solvice API! You can use our API to access Solvice API endpoints, which can get information on your solved jobs, their statuses and of course post new solve jobs.
+
+
+      # Getting started
+
+      > Test our API in just one command
+
+      ```shell
+      curl https://demo:demo@api.solvice.io/demo/vrp | \
+      curl https://demo:demo@api.solvice.io/v1/solve  \
+           -X POST -H "Content-Type: application/json" -d @-
+      ```
+      >You can copy and paste the above in your terminal for a working example. The example uses a randomly generated VRP problem.
+
+
+
+      The Solvice API is super simple! Basically, it holds one [/solve](#solve-endpoint)  endpoint for sending an asynchronous solve request to for a certain optimization problem and it holds one [/jobs/:job_id/solution](#jobs-endpoint)  endpoint for retrieving the solved job asynchronous. That's it!
+      The only thing you have to manage is the actual payload for the solve request.
+
+
+
+      Common usage of the Solvice API follows this flow:
+
+        1. Post solve request for `x` seconds with HTTP param `?seconds=x`
+        2. Wait `x` seconds
+        3. Fetch status of job
+        4. Fetch solution if `status=SOLVED` in solution endpoint
+        4. Fetch statistics if `!score.feasible ` in statistics endpoint
+
+
+      Alternatively, if you have no idea on how long a job will need to solve: we can help you out. Just don't add the seconds parameter and we will let you know when we have finished.
+      We can let you know, either when polling the status or if you add a webhook.
+
+
+      ## Vehicle routing
+      There are different types of problems the Solvice Solver can handle. We differentiate between 3:
+      ### VRP
+      Single day vehicle routing
+
+      ### PDP
+      Single day pickup and deliveries.
+
+
+      ### PVRP
+      Multi day vehicle routing.
+      Examples:
+       -
+
+      ## Clients
+
+      Easily connect to our APIs with these clients. Currently, we have an automated process that produces clients for these programming languages:
+       - Java:
+       - C#:
+       - Python:
+       - nodejs:
+  - name: VRP
+  - name: PDP
+  - name: TMP
+security:
+  - basicAuth: []
+paths:
+  '/jobs/{jobId}':
+    get:
+      tags:
+        - VRP
+        - PDP
+        - TMP
+        - Solvice API
+      summary: Job
+      operationId: getJob
+      description: 'When posting a new solve request, this job can be checked again under this endpoint. In fact, it should be the entire request posted as-is.'
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: The job ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: return a job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          description: Job not found
+  '/jobs/{jobId}/status':
+    get:
+      tags:
+        - VRP
+        - PDP
+        - TMP
+        - Solvice API
+      summary: Status
+      operationId: getJobStatus
+      description: Retrieve a specific job status
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: The job ID.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: job status returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          description: Job not found
+  '/jobs/{jobId}/solution':
+    get:
+      tags:
+        - Solvice API
+      summary: Solution
+      description: Returns the actual solution of the job. Only present when the status is `SOLVED`.
+      operationId: getSolution
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: The job ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: solved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          description: Job not found
+  '/v1/stats/{jobId}':
+    get:
+      tags:
+        - Solvice API
+      summary: Statistics
+      operationId: getStats
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: The job ID.
+          schema:
+            type: string
+            format: uuid
+      description: |
+        Returns the information on why a job has been solved the way it's been.
+        Information includes specific unresolved objects. Want to know how it is optimised?
+        This endpoint lets you know what rules have been overruled.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stats'
+        '404':
+          description: Job not found
+  '/solve#TMP':
+    post:
+      tags:
+        - TMP
+      summary: solve a TMP problem
+      operationId: solveTMP
+      description: Solves a TMP problem
+      responses:
+        '200':
+          description: solved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          $ref: '#/components/responses/bad'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TMP'
+        description: TMP problem solve request
+  '/solve#VRP':
+    post:
+      tags:
+        - VRP
+      summary: solve a VRP problem
+      operationId: solveVRP
+      description: Adds an item to the system
+      responses:
+        '200':
+          description: solved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          $ref: '#/components/responses/bad'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VRP'
+        description: VRP problem solve request
+  '/solve#PDP':
+    post:
+      tags:
+        - PDP
+      summary: Solve a PDP problem
+      operationId: solvePDP
+      description: Pickup and delivery problems
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          $ref: '#/components/responses/bad'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PDP'
+        description: PDP problem solve request
+  '/solve#PVRP':
+    post:
+      tags:
+        - PVRP
+      summary: Solve a PVRP problem
+      operationId: solvePVRP
+      description: Periodic vehicle routing problems
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          $ref: '#/components/responses/bad'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PVRP'
+        description: PVRP problem solve request
+  '/jobs/{jobId}/solution#VRP':
+    get:
+      tags:
+        - VRP
+      summary: Solution VRP
+      operationId: getSolutionVrp
+      description: Returns the actual solution of the VRP. Only present when the status is `SOLVED`.
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: The job ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoutingSolution'
+        '401':
+          description: Job not found
+  '/jobs/{jobId}/solution#PDP':
+    get:
+      tags:
+        - PDP
+      summary: Solution PDP
+      operationId: getSolutionPDP
+      description: Returns the actual solution of the PDP. Only present when the status is `SOLVED`.
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          description: The job ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoutingSolution'
+        '401':
+          description: Job not found
+components:
+  schemas:
+    VRP:
+      type: object
+      required:
+        - solver
+        - locations
+        - orders
+        - fleet
+        - options
+      properties:
+        solver:
+          $ref: '#/components/schemas/Solver'
+          example: VRP
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        fleet:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vehicle'
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        options:
+          $ref: '#/components/schemas/options'
+    PDP:
+      type: object
+      required:
+        - solver
+        - locations
+        - orders
+        - fleet
+        - options
+      properties:
+        solver:
+          $ref: '#/components/schemas/Solver'
+          example: PDP
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        fleet:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vehicle'
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        options:
+          $ref: '#/components/schemas/options'
+    PVRP:
+      type: object
+      required:
+        - solver
+        - locations
+        - orders
+        - fleet
+        - options
+      properties:
+        solver:
+          $ref: '#/components/schemas/Solver'
+          example: PVRP
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+        fleet:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vehicle'
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        options:
+          $ref: '#/components/schemas/options'
+    options:
+      type: object
+      properties:
+        profile:
+          type: string
+          enum:
+            - CAR
+            - TRUCK
+        allow_overtime:
+          type: string
+          description: |
+            If the `shiftend` should be a soft condition to take into account. When `allow_overtime: true` then some orders will be planned after `shiftend`.
+        overconstrained:
+          type: boolean
+          description: |
+            If you do not need to assign everything to
+        minimize_vehicle_use:
+          type: boolean
+          description: sd
+        vehicle_setup_cost:
+          type: number
+    TMP:
+      type: object
+      required:
+        - solver
+        - sales
+        - stores
+      properties:
+        solver:
+          type: string
+          example: TMP
+        sales:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sales'
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Store'
+    Location:
+      type: object
+      required:
+        - name
+        - latitude
+        - longitude
+      properties:
+        name:
+          type: string
+          description: Address (unique)
+          example: 'Ghent, Belgium'
+        latitude:
+          type: number
+          format: double
+          example: 51.0543
+        longitude:
+          type: number
+          format: double
+          example: 3.7174
+    Vehicle:
+      type: object
+      description: |
+        Resource definition of a vehicle. Orders can be assigned in sequence to vehicles.
+      required:
+        - name
+        - startlocation
+      properties:
+        name:
+          type: string
+          example: driver1
+          description: Unique identification of a vehicle via the name.
+        startlocation:
+          type: string
+          example: locatie1
+          description: Start address of the vehicle
+        endlocation:
+          type: string
+          example: locatie1
+          description: End address of the vehicle. The optimisation takes into account the travel back to this location.
+        capacity:
+          type: integer
+          example: 30
+          description: 'Load capacity of the vehicle. For example, 30 tons is the digit 30.'
+        capacity2:
+          type: integer
+          example: 5
+          description: 'Load capacity of the vehicle (second metric). For example, 400 items.'
+        shiftstart:
+          type: integer
+          minimum: 0
+          maximum: 1439
+          example: 460
+          description: Starting time of the shift of this vehicle.
+        shiftend:
+          type: integer
+          minimum: 0
+          maximum: 1439
+          example: 820
+        type:
+          type: array
+          items:
+            type: string
+        unavailable:
+          type: array
+          items:
+            type: string
+            format: date
+        workingDays:
+          type: array
+          items:
+            type: string
+            example: MONDAY
+        overtime:
+          type: boolean
+          description: Indication if vehicle can go in overtime or not.
+        overtime_end:
+          type: integer
+          minimum: 0
+          maximum: 1439
+          description: Last timeblock of overtime.
+        breaks:
+          type: object
+          description: Break definitions
+          required:
+            - breakstart
+            - breakend
+            - breakduration
+          properties:
+            breakstart:
+              type: integer
+              minimum: 0
+              maximum: 1439
+              description: Earliest starting time of break
+              example: 780
+            breakend:
+              type: integer
+              minimum: 0
+              maximum: 1439
+              description: Earliest ending time of break.
+              example: 860
+            breakduration:
+              type: integer
+              minimum: 0
+              maximum: 1439
+              description: 'Duration of break, should be less than end minus start.'
+              example: 30
+        category:
+          type: string
+          enum:
+            - CAR
+            - BIKE
+            - TRUCK
+    Order:
+      type: object
+      required:
+        - name
+        - location
+      properties:
+        name:
+          type: string
+          example: order1
+          description: Unique name of an order
+        location:
+          type: string
+          example: 'Ghent, Belgium'
+          description: Location of an order; should be in location list.
+        activity:
+          type: string
+          enum:
+            - PICKUP
+            - DROPOFF
+            - EXECUTE
+            - BREAK
+          description: activity type
+          default: PICKUP
+        priority:
+          type: integer
+          minimum: 0
+          maximum: 1000
+          description: |
+            Priority allows you to make certain visits a priority over others. In some cases you have more visits than you can serve, resulting in a few unserved. But if you want to make sure your high priority visits take precedence, use this parameter and set it to 100.
+          example: 0
+        duration:
+          type: integer
+          description: Duration of the service in minutes
+          example: 25
+          minimum: 0
+          maximum: 1439
+        demand:
+          type: integer
+          minimum: 0
+          description: Load in cargo for capacity type 1.
+        demand2:
+          type: integer
+          minimum: 0
+          description: Load in cargo for capacity type 2.
+        type:
+          type: array
+          description: Type restriction which can force some orders to be executed by Vehicles with the same type.
+          items:
+            type: string
+            example: Technician
+        windows:
+          description: 'A time window consists of a starttime and an endtime. The order cannot be processed before the starttime and should start being processed before endtime. If the time window is hard, then it should always be fulfilled. E.g. a driver would prefer to drive 3 hours longer than not be on time wrt that time window for that order. So hard time window constraints are pretty extreme!'
+          type: array
+          items:
+            type: object
+            properties:
+              starttime:
+                type: integer
+                minimum: 0
+                maximum: 1439
+                example: 530
+              endtime:
+                type: integer
+                minimum: 0
+                maximum: 1439
+                example: 550
+              hard:
+                type: boolean
+        durationSquash:
+          description: 'When multiple orders are on the same location, the service duration can be lower due to simultaneous handling. The duration will then be this value. is useful when you have many stops at the same location, which could be an apartment complex. Normally, each stop has a duration value of let''s say 10 minutes, which accounts for parking and finding the entrance. If you had 6 stops assigned to a driver at the same time, it doesn''t take an hour in total! Use this parameter to squash the durations of each subsequent delivery at the same address. If you set it to 1, it will squash it to 1 minute, so the total duration for the above 6 stops would be 15 minutes.'
+          type: integer
+          minimum: 0
+          example: 5
+        dateWindows:
+          type: array
+          description: List of start/end date/time combinations.
+          items:
+            type: object
+            properties:
+              starttime:
+                type: integer
+                minimum: 0
+                maximum: 1439
+                example: 530
+              endtime:
+                type: integer
+                minimum: 0
+                maximum: 1439
+                example: 550
+              start:
+                type: string
+                format: date
+                example: '2019-12-11'
+              end:
+                type: string
+                format: date
+                example: '2019-12-15'
+        allowedVehicles:
+          type: array
+          items:
+            type: string
+          description: List of vehicle names that are allowed to be assigned to this order
+        disallowedVehicles:
+          type: array
+          items:
+            type: string
+          description: List of vehicle names that are not allowed to be assigned to this order
+    Sales:
+      type: object
+      required:
+        - name
+        - home
+      properties:
+        name:
+          type: string
+          example: sales1
+        home:
+          $ref: '#/components/schemas/Location'
+        max_visits:
+          type: integer
+          example: 5
+          description: Maximum number of total visits
+        max_travel:
+          type: integer
+          example: 1000
+          description: Maximum total travel time (in km bird distance)
+        percentage:
+          type: integer
+          example: 100
+          description: Working percentage (parttime)
+        languages:
+          type: array
+          description: Languages
+          items:
+            type: string
+            example: NL
+    Store:
+      type: object
+      required:
+        - name
+        - location
+      properties:
+        name:
+          type: string
+          example: store1
+        location:
+          $ref: '#/components/schemas/Location'
+        frequency:
+          type: integer
+          example: 3
+          description: Visit frequency
+        potential:
+          type: integer
+          example: 5000
+        language:
+          type: string
+          example: NL
+        duration:
+          type: integer
+          example: 15
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        solver:
+          $ref: '#/components/schemas/Solver'
+        status:
+          $ref: '#/components/schemas/Status'
+    Stats:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        goals:
+          type: array
+          items:
+            type: object
+            properties:
+              goal:
+                type: string
+              weight:
+                type: integer
+              conflicts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    weight:
+                      type: integer
+                    reasons:
+                      type: array
+                      items:
+                        type: string
+    RoutingSolution:
+      type: object
+      properties:
+        solution:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/Visit'
+    Visit:
+      type: object
+      properties:
+        location:
+          type: string
+          example: 'Ghent, Belgium'
+        order:
+          type: string
+          example: order_233062
+        arrival:
+          type: integer
+          example: 730
+        finish:
+          type: integer
+          example: 750
+        drive:
+          type: integer
+          example: 5
+          description: Drive time to next location in minutes.
+        distance:
+          type: integer
+          example: 4294
+          description: Distance to next location in meters.
+        date:
+          type: string
+          format: date
+          description: Date on which this visit is scheduled.
+        activity:
+          type: string
+          description: 'Type of visit (pickup, delivery or execution)'
+        coords:
+          $ref: '#/components/schemas/Location'
+          description: Coordinates in WSG84
+    Solver:
+      type: string
+      enum:
+        - VRP
+        - PDP
+        - PVRP
+    Status:
+      type: string
+      enum:
+        - ERROR
+        - QUEUED
+        - SOLVING
+        - SOLVED
+      example: SOLVING
+    ApiError:
+      type: array
+      items:
+        type: object
+        properties:
+          status:
+            type: string
+          message:
+            type: string
+    InputError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+  responses:
+    bad:
+      description: Bad Request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InputError'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
