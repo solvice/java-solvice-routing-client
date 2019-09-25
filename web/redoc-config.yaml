@@ -1,0 +1,28 @@
+theme:
+  logo:
+    gutter: 20px 30px 14px 30px
+  colors:
+    text:
+      primary: '#333333'
+  typography:
+    headings:
+      fontFamily: 'Open Sans'
+    fontFamily: 'Roboto, Verdana, Geneva, sans-serif'
+    fontSize: '15px'
+    code:
+      fontFamily: '"Courier New",monospace'
+      tokens:
+        'token.property':
+          color: "#aofbaa"
+        string:
+          color: "#aofbac"
+    rightPanelHeading:
+      color: white
+  rightPanel:
+    backgroundColor: "#263238"
+  menu:
+    backgroundColor: "#000F9F"
+    textColor: "#Ffffff"
+  links:
+    color: "#6CC496"
+  hideLoading: true
