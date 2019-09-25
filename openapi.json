@@ -21,7 +21,7 @@
   "tags": [
     {
       "name": "Solvice API",
-      "description": "\nWelcome to the Solvice API! You can use our API to access Solvice API endpoints, which can get information on your solved jobs, their statuses and of course post new solve jobs.\n\n\n# Getting started\n\n> Test our API in just one command\n\n```shell\ncurl https://demo:demo@api.solvice.io/demo/vrp | \\\ncurl https://demo:demo@api.solvice.io/v1/solve  \\\n     -X POST -H \"Content-Type: application/json\" -d @-\n```\n>You can copy and paste the above in your terminal for a working example. The example uses a randomly generated VRP problem.\n\n\n\nThe Solvice API is super simple! Basically, it holds one [/solve](#solve-endpoint)  endpoint for sending an asynchronous solve request to for a certain optimization problem and it holds one [/jobs/:job_id/solution](#jobs-endpoint)  endpoint for retrieving the solved job asynchronous. That's it!\nThe only thing you have to manage is the actual payload for the solve request.\n\n\n\nCommon usage of the Solvice API follows this flow:\n\n  1. Post solve request for `x` seconds with HTTP param `?seconds=x`\n  2. Wait `x` seconds\n  3. Fetch status of job\n  4. Fetch solution if `status=SOLVED` in solution endpoint\n  4. Fetch statistics if `!score.feasible ` in statistics endpoint\n\n\nAlternatively, if you have no idea on how long a job will need to solve: we can help you out. Just don't add the seconds parameter and we will let you know when we have finished.\nWe can let you know, either when polling the status or if you add a webhook.\n\n\n## Vehicle routing\nThere are different types of problems the Solvice Solver can handle. We differentiate between 3:\n### VRP\nSingle day vehicle routing\n\n### PDP\nSingle day pickup and deliveries.\n\n\n### PVRP\nMulti day vehicle routing.\nExamples:\n -\n\n## Clients\n\nEasily connect to our APIs with these clients. Currently, we have an automated process that produces clients for these programming languages:\n - Java:\n - C#:\n - Python:\n - nodejs:\n"
+      "description": "\nWelcome to the Solvice API! You can use our API to access Solvice API endpoints, which can get information on your solved jobs, their statuses and of course post new solve jobs.\n\n\n# Getting started\n\n> Test our API in just one command\n\n```shell\ncurl https://demo:demo@api.solvice.io/demo/vrp | \\\ncurl https://demo:demo@api.solvice.io/v1/solve  \\\n     -X POST -H \"Content-Type: application/json\" -d @-\n```\n>You can copy and paste the above in your terminal for a working example. The example uses a randomly generated VRP problem.\n\n\n\nThe Solvice API is super simple! Basically, it holds one [/solve](#solve-endpoint)  endpoint for sending an asynchronous solve request to for a certain optimization problem and it holds one [/jobs/:job_id/solution](#jobs-endpoint)  endpoint for retrieving the solved job asynchronous. That's it!\nThe only thing you have to manage is the actual payload for the solve request.\n\n\n\nCommon usage of the Solvice API follows this flow:\n\n  1. Post solve request for `x` seconds with HTTP param `?seconds=x`\n  2. Wait `x` seconds\n  3. Fetch status of job\n  4. Fetch solution if `status=SOLVED` in solution endpoint\n  4. Fetch statistics if `!score.feasible ` in statistics endpoint\n\n\nAlternatively, if you have no idea on how long a job will need to solve: we can help you out. Just don't add the seconds parameter and we will let you know when we have finished.\nWe can let you know, either when polling the status or if you add a webhook.\n\n\n## Vehicle routing\nThere are different types of problems the Solvice Solver can handle. We differentiate between 3 types:\n### VRP\nSingle day Vehicle Routing Problem (VRP).\nWe see examples of VRP every day:\n - Meal prep companies delivering food from central kitchens to hungry homes\n - Delivery vans that bring you groceries from local stores\n - Couriers who deliver packages to your office\n\nThe Vehicle Routing Problem is everywhere, and solving it is critical in helping to facilitate the movement of goods and services from one place to another.\nAs the problem entails not only finding the shortest path between addresses but also the assignment of stops to multiple drivers, optimization techniques and algorithms are most definitely recommended.\n\n### PDP\nSingle day Pickup and Delivery Problem (PDP).\nThis model works well for third party logistics but if you are a restaurant delivery service, a parcel courier, or ridesharing platform, you need a way to handle multiple pickup and delivery addresses while taking into account vehicle capacities, driver shift timings and delivery time windows. VRP or TSP solvers can’t help you because they are constrained to a single depot location.\n\n### PVRP\nMulti day (Periodic) Vehicle Routing Problem (PVRP).\nExamples:\n -\n\n\n## Differences with Google\nThe main challenge in any logistics business is lowering cost per delivery. By trying to minimize the total driving distance of your vehicle fleet, the Solvice Engine PDP API automatically batches pickups and dropoffs at common locations together, increasing the utilization of your fleet and reducing your cost per delivery.\nMapbox offers an optimization API that allows you to route pickups and dropoffs but they only support a single driver. The Google Maps Directions API cannot distinguish between pickups and dropoffs, and neither of these services support time-window constraints, capacity constraints, round trips, stop priority, driver breaks, and more.\n\nSend the addresses of your pickup and delivery orders, along with the locations for all your drivers in your fleet – Solvice will return a JSON response detailing the optimal order in which you should visit those addresses.\n\n## Clients\n\nEasily connect to our APIs with these clients. Currently, we have an automated process that produces clients for these programming languages:\n - Java\n - C#\n - Python\n - nodejs\nCheck out our GitHub repo: https://github.com/solvice/solvice-routing-client/\n"
     },
     {
       "name": "VRP"
@@ -985,6 +985,54 @@
       "RoutingSolution": {
         "type": "object",
         "properties": {
+          "score": {
+            "description": "The score of a solution shows how good this solution is w.r.t all the constraints.",
+            "type": "object",
+            "properties": {
+              "hardScore": {
+                "type": "integer",
+                "description": "The score of the constraints that are hard. This should be 0 in order to be feasible."
+              },
+              "mediumScore": {
+                "type": "integer",
+                "description": "The score of the constraints that are medium."
+              },
+              "softScore": {
+                "type": "integer",
+                "description": "The score of the constraints that are soft."
+              },
+              "feasible": {
+                "type": "boolean",
+                "description": "Feasibility check on hard constraints. Check unresolved parameter if you cannot reach feasibility."
+              }
+            }
+          },
+          "unresolved": {
+            "type": "array",
+            "description": "The unresolved constraints show the list of constraints that could not achieve feasibility for the current solve.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "Name of the constraint.",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Value of the unresolved constraint. The higher, the more deviation from perfection this constraint has.",
+                  "type": "integer"
+                },
+                "level": {
+                  "description": "Level of unresolved constraint.",
+                  "type": "string",
+                  "enum": [
+                    "HARD",
+                    "SOFT",
+                    "MEDIUM"
+                  ]
+                }
+              }
+            }
+          },
           "solution": {
             "type": "object",
             "additionalProperties": {
@@ -1000,24 +1048,32 @@
         "type": "object",
         "properties": {
           "location": {
+            "description": "Location name.",
             "type": "string",
             "example": "Ghent, Belgium"
           },
           "order": {
+            "description": "Order name.",
             "type": "string",
             "example": "order_233062"
           },
           "arrival": {
+            "description": "Arrival at visit",
             "type": "integer",
-            "example": 730
+            "example": 730,
+            "minimum": 0,
+            "maximum": 1440
           },
           "finish": {
             "type": "integer",
-            "example": 750
+            "example": 750,
+            "minimum": 0,
+            "maximum": 1440
           },
           "drive": {
             "type": "integer",
             "example": 5,
+            "minimum": 0,
             "description": "Drive time to next location in minutes."
           },
           "distance": {

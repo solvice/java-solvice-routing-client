@@ -49,26 +49,41 @@ tags:
 
 
       ## Vehicle routing
-      There are different types of problems the Solvice Solver can handle. We differentiate between 3:
+      There are different types of problems the Solvice Solver can handle. We differentiate between 3 types:
       ### VRP
-      Single day vehicle routing
+      Single day Vehicle Routing Problem (VRP).
+      We see examples of VRP every day:
+       - Meal prep companies delivering food from central kitchens to hungry homes
+       - Delivery vans that bring you groceries from local stores
+       - Couriers who deliver packages to your office
+
+      The Vehicle Routing Problem is everywhere, and solving it is critical in helping to facilitate the movement of goods and services from one place to another.
+      As the problem entails not only finding the shortest path between addresses but also the assignment of stops to multiple drivers, optimization techniques and algorithms are most definitely recommended.
 
       ### PDP
-      Single day pickup and deliveries.
-
+      Single day Pickup and Delivery Problem (PDP).
+      This model works well for third party logistics but if you are a restaurant delivery service, a parcel courier, or ridesharing platform, you need a way to handle multiple pickup and delivery addresses while taking into account vehicle capacities, driver shift timings and delivery time windows. VRP or TSP solvers can’t help you because they are constrained to a single depot location.
 
       ### PVRP
-      Multi day vehicle routing.
+      Multi day (Periodic) Vehicle Routing Problem (PVRP).
       Examples:
        -
+
+
+      ## Differences with Google
+      The main challenge in any logistics business is lowering cost per delivery. By trying to minimize the total driving distance of your vehicle fleet, the Solvice Engine PDP API automatically batches pickups and dropoffs at common locations together, increasing the utilization of your fleet and reducing your cost per delivery.
+      Mapbox offers an optimization API that allows you to route pickups and dropoffs but they only support a single driver. The Google Maps Directions API cannot distinguish between pickups and dropoffs, and neither of these services support time-window constraints, capacity constraints, round trips, stop priority, driver breaks, and more.
+
+      Send the addresses of your pickup and delivery orders, along with the locations for all your drivers in your fleet – Solvice will return a JSON response detailing the optimal order in which you should visit those addresses.
 
       ## Clients
 
       Easily connect to our APIs with these clients. Currently, we have an automated process that produces clients for these programming languages:
-       - Java:
-       - C#:
-       - Python:
-       - nodejs:
+       - Java
+       - C#
+       - Python
+       - nodejs
+      Check out our GitHub repo: https://github.com/solvice/solvice-routing-client/
   - name: VRP
   - name: PDP
   - name: TMP
@@ -747,6 +762,41 @@ components:
     RoutingSolution:
       type: object
       properties:
+        score:
+          description: The score of a solution shows how good this solution is w.r.t all the constraints.
+          type: object
+          properties:
+            hardScore:
+              type: integer
+              description: The score of the constraints that are hard. This should be 0 in order to be feasible.
+            mediumScore:
+              type: integer
+              description: The score of the constraints that are medium.
+            softScore:
+              type: integer
+              description: The score of the constraints that are soft.
+            feasible:
+              type: boolean
+              description: Feasibility check on hard constraints. Check unresolved parameter if you cannot reach feasibility.
+        unresolved:
+          type: array
+          description: The unresolved constraints show the list of constraints that could not achieve feasibility for the current solve.
+          items:
+            type: object
+            properties:
+              name:
+                description: Name of the constraint.
+                type: string
+              value:
+                description: 'Value of the unresolved constraint. The higher, the more deviation from perfection this constraint has.'
+                type: integer
+              level:
+                description: Level of unresolved constraint.
+                type: string
+                enum:
+                  - HARD
+                  - SOFT
+                  - MEDIUM
         solution:
           type: object
           additionalProperties:
@@ -757,20 +807,28 @@ components:
       type: object
       properties:
         location:
+          description: Location name.
           type: string
           example: 'Ghent, Belgium'
         order:
+          description: Order name.
           type: string
           example: order_233062
         arrival:
+          description: Arrival at visit
           type: integer
           example: 730
+          minimum: 0
+          maximum: 1440
         finish:
           type: integer
           example: 750
+          minimum: 0
+          maximum: 1440
         drive:
           type: integer
           example: 5
+          minimum: 0
           description: Drive time to next location in minutes.
         distance:
           type: integer
