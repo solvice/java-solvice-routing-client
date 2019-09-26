@@ -1,0 +1,197 @@
+{
+  "options": {
+    "profile": "TRUCK"
+  },
+  "locations": [
+    {
+      "name": "loc0",
+      "latitude": 51.12317420299715,
+      "longitude": 5.281797793554478
+    },
+    {
+      "name": "loc1",
+      "latitude": 50.65329310557439,
+      "longitude": 4.517600740757033
+    },
+    {
+      "name": "loc2",
+      "latitude": 51.20586951408341,
+      "longitude": 5.050825570502835
+    },
+    {
+      "name": "loc3",
+      "latitude": 51.116048511299724,
+      "longitude": 3.4438340449873435
+    },
+    {
+      "name": "loc4",
+      "latitude": 51.19626097183903,
+      "longitude": 4.457433874684473
+    },
+    {
+      "name": "loc5",
+      "latitude": 51.308125618134085,
+      "longitude": 3.597829157609509
+    },
+    {
+      "name": "loc6",
+      "latitude": 51.375219897302884,
+      "longitude": 3.4311920609779953
+    },
+    {
+      "name": "loc7",
+      "latitude": 50.469517882499886,
+      "longitude": 3.4815045874748227
+    }
+  ],
+  "fleet": [
+    {
+      "name": "truck0",
+      "capacity": 20,
+      "capacity2": 23,
+      "startlocation": "loc6",
+      "endlocation": "loc4",
+      "shiftstart": 500,
+      "shiftend": 900,
+      "category": "TRUCK",
+      "overtime": false,
+      "breaks": [
+        {
+          "breakduration": 40,
+          "breakinit": 100
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ]
+    },
+    {
+      "name": "truck1",
+      "capacity": 24,
+      "capacity2": 25,
+      "startlocation": "loc3",
+      "endlocation": "loc7",
+      "shiftstart": 500,
+      "shiftend": 900,
+      "category": "TRUCK",
+      "overtime": false,
+      "breaks": [
+        {
+          "breakduration": 40,
+          "breakinit": 100
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "type": [
+        "Maintenance"
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "name": "order0",
+      "location": "loc1",
+      "windows": [
+        {
+          "starttime": 480,
+          "endtime": 720,
+          "hard": true
+        },
+        {
+          "starttime": 780,
+          "endtime": 1020,
+          "hard": true
+        }
+      ],
+      "demand": 2,
+
+      "duration": 30
+    },
+    {
+      "name": "order1",
+      "location": "loc3",
+      "demand": 1,
+      "duration": 30,
+      "type": [
+        "Technician"
+      ],
+      "restriction": [
+        "Maintenance"
+      ]
+    },
+    {
+      "name": "order2",
+      "location": "loc1",
+      "windows": [
+        {
+          "starttime": 480,
+          "endtime": 720,
+          "hard": true
+        },
+        {
+          "starttime": 780,
+          "endtime": 1020,
+          "hard": true
+        }
+      ],
+      "demand": 1,
+      "duration": 30
+    },
+    {
+      "name": "order3",
+      "location": "loc0",
+      "demand": 2,
+      "duration": 30
+    },
+    {
+      "name": "order4",
+      "location": "loc1",
+      "windows": [
+        {
+          "starttime": 480,
+          "endtime": 720,
+          "hard": true
+        },
+        {
+          "starttime": 780,
+          "endtime": 1020,
+          "hard": true
+        }
+      ],
+      "demand": 2,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "duration": 30
+    },
+    {
+      "name": "order5",
+      "location": "loc7",
+      "demand": 2,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "duration": 30,
+      "type": [
+        "Maintenance"
+      ],
+      "restriction": [
+        "Technician"
+      ]
+    },
+    {
+      "name": "order6",
+      "location": "loc3",
+      "demand": 2,
+      "duration": 30
+    }
+  ]
+}

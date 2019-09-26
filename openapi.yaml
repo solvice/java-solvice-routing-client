@@ -331,6 +331,8 @@ paths:
 components:
   schemas:
     VRP:
+      example:
+        $ref: examples/vrp.json
       allOf:
         - $ref: '#/components/schemas/SolveRequest'
         - type: object
@@ -355,6 +357,8 @@ components:
             options:
               $ref: '#/components/schemas/options'
     PDP:
+      example:
+        $ref: examples/pdp.json
       allOf:
         - $ref: '#/components/schemas/SolveRequest'
         - type: object
@@ -379,6 +383,8 @@ components:
             options:
               $ref: '#/components/schemas/options'
     PVRP:
+      example:
+        $ref: examples/pvrp.json
       allOf:
         - $ref: '#/components/schemas/SolveRequest'
         - type: object
@@ -927,6 +933,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InputError'
+  examples:
+    vrp:
+      externalValue: ''
   securitySchemes:
     basicAuth:
       type: http

@@ -301,6 +301,9 @@
   "components": {
     "schemas": {
       "VRP": {
+        "example": {
+          "$ref": "examples/vrp.json"
+        },
         "allOf": [
           {
             "$ref": "#/components/schemas/SolveRequest"
@@ -340,6 +343,9 @@
         ]
       },
       "PDP": {
+        "example": {
+          "$ref": "examples/pdp.json"
+        },
         "allOf": [
           {
             "$ref": "#/components/schemas/SolveRequest"
@@ -379,6 +385,9 @@
         ]
       },
       "PVRP": {
+        "example": {
+          "$ref": "examples/pvrp.json"
+        },
         "allOf": [
           {
             "$ref": "#/components/schemas/SolveRequest"
@@ -1122,6 +1131,11 @@
             }
           }
         }
+      }
+    },
+    "examples": {
+      "vrp": {
+        "externalValue": ""
       }
     },
     "securitySchemes": {

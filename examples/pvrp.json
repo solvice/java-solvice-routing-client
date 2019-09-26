@@ -1,0 +1,269 @@
+{
+  "solver": "PVRP",
+  "period": {
+    "start": "2019-06-10",
+    "end": "2019-06-12"
+  },
+  "options": {
+    "capacitySpread": true,
+    "overconstrained": false,
+    "polylines": false,
+    "minimize_driver_wait_time": false,
+    "minimize_vehicle_use": true,
+    "allow_overtime": true,
+    "profile": "TRUCK",
+    "max_orders_per_vehicle": false,
+    "force_type_constraint": false
+  },
+  "locations": [
+    {
+      "name": "loc0",
+      "latitude": 51.132042753741956,
+      "longitude": 3.7120073316457938
+    },
+    {
+      "name": "loc1",
+      "latitude": 51.19384837423016,
+      "longitude": 3.626153117855758
+    },
+    {
+      "name": "loc2",
+      "latitude": 50.5550178025823,
+      "longitude": 3.8168659524099775
+    },
+    {
+      "name": "loc3",
+      "latitude": 50.843001688339235,
+      "longitude": 4.349110505812941
+    },
+    {
+      "name": "loc4",
+      "latitude": 50.463033765087395,
+      "longitude": 5.2825072718456365
+    },
+    {
+      "name": "loc5",
+      "latitude": 51.208309586355284,
+      "longitude": 4.3108929536226475
+    },
+    {
+      "name": "loc6",
+      "latitude": 50.77713707594933,
+      "longitude": 3.7485844267747077
+    }
+  ],
+  "fleet": [
+    {
+      "name": "truck0",
+      "startlocation": "loc6",
+      "endlocation": "loc4",
+      "shiftstart": 480,
+      "shiftend": 800,
+      "overtime": true,
+      "breaks": [
+        {
+          "breakstart": 710,
+          "breakend": 780,
+          "breakduration": 30
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "overtime_end": 830
+    },
+    {
+      "name": "truck1",
+      "startlocation": "loc3",
+      "endlocation": "loc0",
+      "shiftstart": 480,
+      "shiftend": 800,
+      "overtime": true,
+      "breaks": [
+        {
+          "breakstart": 710,
+          "breakend": 780,
+          "breakduration": 30
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "unavailable": [
+        "2019-09-26"
+      ],
+      "overtime_end": 830
+    }
+  ],
+  "orders": [
+    {
+      "name": "order0",
+      "location": "loc2",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 655
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    },
+    {
+      "name": "order1",
+      "location": "loc0",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 643
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    },
+    {
+      "name": "order2",
+      "location": "loc4",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 580
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    },
+    {
+      "name": "order3",
+      "location": "loc0",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 679
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    },
+    {
+      "name": "order4",
+      "location": "loc6",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 506
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    },
+    {
+      "name": "order5",
+      "location": "loc1",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 611
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    },
+    {
+      "name": "order6",
+      "location": "loc2",
+      "demand": 0,
+      "demand2": 0,
+      "disallowedVehicles": [],
+      "dateWindows": [
+        {
+          "start": "2019-06-10",
+          "end": "2019-06-11",
+          "startTime": 400,
+          "endTime": 510
+        }
+      ],
+      "openingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "duration": 30
+    }
+  ]
+}

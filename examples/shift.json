@@ -1,0 +1,150 @@
+{
+  "solver": "SHIFT",
+  "demand": [
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 0
+      },
+      "skill": "Kitchen",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    },
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 0
+      },
+      "skill": "Restaurant",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    },
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 0
+      },
+      "skill": "Chef",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    },
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 1
+      },
+      "skill": "Kitchen",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    },
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 1
+      },
+      "skill": "Restaurant",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    },
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 1
+      },
+      "skill": "Chef",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    },
+    {
+      "shift": {
+        "date": "2019-06-05",
+        "index": 2
+      },
+      "skill": "Kitchen",
+      "prefDemand": 0,
+      "minDemand": 0,
+      "maxDemand": 3
+    }
+  ],
+  "statutes": [
+    {
+      "name": "FIX",
+      "minShiftLength": 3,
+      "maxShiftLength": 11,
+      "minRestBetweenShifts": 12,
+      "maxConsecutiveWorkDays": 6,
+      "maxHrsPerWeek": 50,
+      "minHrsPerWeek": 0,
+      "shiftStart": 0,
+      "latestShiftStart": 24,
+      "shiftEnd": 22,
+      "minHoursMonth": 10,
+      "maxHoursMonth": 200,
+      "overTimeThreshold1": 9,
+      "overTimeRaise1": 1.2,
+      "overTimeThreshold2": 11,
+      "overTimeRaise2": 1.5,
+      "overTimeWeeklyThreshold1": 38,
+      "overTimeWeeklyRaise1": 1.5,
+      "nightlyThreshold1": 20.5,
+      "nightlyRaise": 1.5
+    }
+  ],
+  "employees": [
+    {
+      "name": "E0",
+      "statute": "FIX",
+      "skill": [
+        "Restaurant"
+      ],
+      "hourlyPay": 11,
+      "efficiency": 1,
+      "hoursWorkedThisMonth": 0,
+      "lastRestDate": "2019-06-04"
+    },
+    {
+      "name": "E1",
+      "statute": "FIX",
+      "skill": [
+        "Chef"
+      ],
+      "hourlyPay": 15,
+      "efficiency": 1,
+      "hoursWorkedThisMonth": 0,
+      "lastRestDate": "2019-06-05"
+    },
+    {
+      "name": "E2",
+      "statute": "FIX",
+      "skill": [
+        "Kitchen"
+      ],
+      "hourlyPay": 13,
+      "efficiency": 0.5,
+      "hoursWorkedThisMonth": 0,
+      "lastRestDate": "2019-06-03"
+    },
+    {
+      "name": "E3",
+      "statute": "FIX",
+      "skill": [
+        "Chef"
+      ],
+      "hourlyPay": 15,
+      "efficiency": 0.25,
+      "hoursWorkedThisMonth": 0,
+      "lastRestDate": "2019-06-05"
+    }
+  ],
+  "options": {
+    "shiftBlocksPerDay": 24,
+    "maxShiftBlocksPerDay": 24,
+    "startDate": "2019-06-05"
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "solver": "PDP",
+  "options": {
+    "profile": "TRUCK",
+    "max_orders_per_vehicle": false,
+    "force_type_constraint": false
+  },
+  "locations": [
+    {
+      "name": "loc0",
+      "latitude": 51.12200965485964,
+      "longitude": 3.6899521146954104
+    },
+    {
+      "name": "loc1",
+      "latitude": 51.06715957265395,
+      "longitude": 4.856881734820298
+    },
+    {
+      "name": "loc2",
+      "latitude": 51.01860760602406,
+      "longitude": 4.54619398262438
+    },
+    {
+      "name": "loc3",
+      "latitude": 50.63675163488486,
+      "longitude": 4.274454316738221
+    },
+    {
+      "name": "loc4",
+      "latitude": 51.08042212441483,
+      "longitude": 4.349090900630776
+    },
+    {
+      "name": "loc5",
+      "latitude": 50.89699034416118,
+      "longitude": 5.281972321997727
+    },
+    {
+      "name": "loc6",
+      "latitude": 51.2921398533576,
+      "longitude": 3.9955748888557574
+    }
+  ],
+  "fleet": [
+    {
+      "name": "truck0",
+      "capacity": 83,
+      "startlocation": "loc5",
+      "endlocation": "loc0",
+      "shiftstart": 420,
+      "shiftend": 1020,
+      "overtime": true,
+      "breaks": [
+        {
+          "breakstart": 720,
+          "breakend": 780,
+          "breakduration": 30
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ]
+    },
+    {
+      "name": "truck1",
+      "capacity": 88,
+      "startlocation": "loc5",
+      "endlocation": "loc0",
+      "shiftstart": 420,
+      "shiftend": 1020,
+      "overtime": true,
+      "breaks": [
+        {
+          "breakstart": 720,
+          "breakend": 780,
+          "breakduration": 30
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ]
+    },
+    {
+      "name": "truck2",
+      "capacity": 83,
+      "startlocation": "loc5",
+      "endlocation": "loc2",
+      "shiftstart": 420,
+      "shiftend": 1020,
+      "overtime": false,
+      "breaks": [
+        {
+          "breakstart": 720,
+          "breakend": 780,
+          "breakduration": 30
+        }
+      ],
+      "workingDays": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY"
+      ],
+      "type": [
+        "A"
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "name": "order0P",
+      "location": "loc6",
+      "demand": 39,
+      "demand2": 0,
+      "activity": "PICKUP",
+      "ride": "order0",
+      "duration": 2
+    },
+    {
+      "name": "order0D",
+      "location": "loc0",
+      "windows": [
+        {
+          "starttime": 535,
+          "endtime": 1200,
+          "hard": true
+        }
+      ],
+      "demand": 39,
+      "demand2": 0,
+      "activity": "DROPOFF",
+      "ride": "order0",
+      "duration": 5
+    },
+    {
+      "name": "order1P",
+      "location": "loc2",
+      "demand": 49,
+      "demand2": 0,
+      "activity": "PICKUP",
+      "ride": "order1",
+      "duration": 19
+    },
+    {
+      "name": "order1D",
+      "location": "loc1",
+      "windows": [
+        {
+          "starttime": 345,
+          "endtime": 1200,
+          "hard": true
+        }
+      ],
+      "demand": 49,
+      "demand2": 0,
+      "activity": "DROPOFF",
+      "ride": "order1",
+      "duration": 5
+    },
+    {
+      "name": "order2P",
+      "location": "loc2",
+      "demand": 42,
+      "demand2": 0,
+      "activity": "PICKUP",
+      "ride": "order2",
+      "duration": 14
+    },
+    {
+      "name": "order2D",
+      "location": "loc0",
+      "windows": [
+        {
+          "starttime": 654,
+          "endtime": 1200,
+          "hard": true
+        }
+      ],
+      "demand": 42,
+      "demand2": 0,
+      "activity": "DROPOFF",
+      "disallowedVehicles": [],
+      "ride": "order2",
+      "duration": 5
+    },
+    {
+      "name": "order3P",
+      "location": "loc0",
+      "demand": 4,
+      "demand2": 0,
+      "activity": "PICKUP",
+      "ride": "order3",
+      "duration": 16,
+      "type": [
+        "A"
+      ]
+    },
+    {
+      "name": "order3D",
+      "location": "loc0",
+      "windows": [
+        {
+          "starttime": 371,
+          "endtime": 1200,
+          "hard": true
+        }
+      ],
+      "demand": 4,
+      "demand2": 0,
+      "activity": "DROPOFF",
+      "ride": "order3",
+      "duration": 5,
+      "type": [
+        "A"
+      ]
+    },
+    {
+      "name": "order4P",
+      "location": "loc5",
+      "demand": 30,
+      "demand2": 0,
+      "activity": "PICKUP",
+      "ride": "order4",
+      "duration": 6,
+      "type": [
+        "A"
+      ]
+    },
+    {
+      "name": "order4D",
+      "location": "loc5",
+      "windows": [
+        {
+          "starttime": 718,
+          "endtime": 1200,
+          "hard": true
+        }
+      ],
+      "demand": 30,
+      "demand2": 0,
+      "activity": "DROPOFF",
+      "disallowedVehicles": [],
+      "ride": "order4",
+      "duration": 5,
+      "type": [
+        "A"
+      ]
+    },
+    {
+      "name": "order5P",
+      "location": "loc5",
+      "demand": 42,
+      "demand2": 0,
+      "activity": "PICKUP",
+      "ride": "order5",
+      "duration": 13,
+      "type": [
+        "A"
+      ]
+    },
+    {
+      "name": "order5D",
+      "location": "loc0",
+      "windows": [
+        {
+          "starttime": 446,
+          "endtime": 1200,
+          "hard": true
+        }
+      ],
+      "demand": 42,
+      "demand2": 0,
+      "activity": "DROPOFF",
+      "ride": "order5",
+      "duration": 5,
+      "type": [
+        "A"
+      ]
+    }
+  ]
+}
